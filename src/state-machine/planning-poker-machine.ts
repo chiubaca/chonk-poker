@@ -3,7 +3,7 @@ import { assign, type SnapshotFrom, setup } from "xstate";
 import type {
 	PokerGameContext,
 	PokerGameEvents,
-} from "./planning-poker-machine.schemas";
+} from "./planning-poker-machine.types";
 
 export type PlanningPokerMachineType = typeof planningPokerMachine;
 
