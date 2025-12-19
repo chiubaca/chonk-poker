@@ -19,6 +19,7 @@ export const createNewUserServerFn = createServerFn()
 
 		setCookie(USER_COOKIE_KEY_ENUM.USER_ID, userId);
 		setCookie(USER_COOKIE_KEY_ENUM.USERNAME, data.userName);
+		return { userId, userName: data.userName };
 	});
 
 export const setUserServerFn = createServerFn()
