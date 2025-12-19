@@ -1,7 +1,10 @@
 // /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
-import { createFileRoute } from "@tanstack/react-router";
+
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Hash as HashIcon, User as UserIcon } from "lucide-react";
 import { useActionState } from "react";
+import { createNewUserServerFn } from "@/server-functions/user";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,
@@ -16,59 +19,52 @@ const FormFieldsEnum = {
 type FormState = {
 	username: string;
 	roomId: string;
-	error?: string;
-	success?: string;
-};
+} | null;
 
-async function formActionHandler(
-	prevState: FormState,
-	formData: FormData,
-): Promise<FormState> {
-	const username = formData.get(FormFieldsEnum.USER_NAME) as string;
-	const roomId = formData.get(FormFieldsEnum.ROOM_ID) as string;
-	const actionType = formData.get(FormFieldsEnum.ACTION_TYPE) as string;
-	console.log("🔍 ~ formActionHandler ~ src/routes/index.tsx:26 ~ username:", {
-		username,
-		roomId,
-		actionType,
-	});
-
-	if (!username?.trim()) {
-		return { ...prevState, error: "Username is required" };
-	}
-
-	if (actionType === "create") {
-		// TODO: Create new room logic
-		console.log("Creating new room with username:", username);
-		return {
-			username,
-			roomId: "",
-			success: "Room created successfully!",
-		};
-	}
-
-	if (actionType === "join") {
-		if (!roomId?.trim()) {
-			return { ...prevState, error: "Room ID is required" };
+export const handleFormServerFn = createServerFn({ method: "POST" })
+	.inputValidator((formData) => {
+		if (!(formData instanceof FormData)) {
+			throw new Error("Expected FormData");
 		}
 
-		// TODO: Join existing room logic
-		console.log("Joining room:", roomId, "with username:", username);
 		return {
-			username,
-			roomId,
-			success: `Joined room ${roomId} successfully!`,
+			userName: formData.get(FormFieldsEnum.USER_NAME)?.toString() || "",
+			roomId: formData.get(FormFieldsEnum.ROOM_ID)?.toString() || "",
+			actionType: formData.get(FormFieldsEnum.ACTION_TYPE)?.toString() || "",
 		};
-	}
+	})
+	.handler(async ({ data }) => {
+		const { userName, roomId, actionType } = data;
 
-	return { ...prevState, error: "Invalid action" };
-}
+		if (actionType === "create") {
+			console.log("handle create!");
+
+			await createNewUserServerFn({ data: { userName } });
+
+			console.log("redirecting...");
+
+			const newRoomId = "p00p";
+			throw redirect({
+				to: "/room/$roomId",
+				params: { roomId: newRoomId },
+			});
+		}
+
+		if (actionType === "join") {
+			console.log("not impleted yet...");
+		}
+	});
 
 function RouteComponent() {
-	const [formState, formAction, isPending] = useActionState(formActionHandler, {
-		username: "",
-		roomId: "",
-	});
+	const handleForm = useServerFn(handleFormServerFn);
+
+	const [_formState, formAction, isPending] = useActionState(
+		(_prevState: FormState, formData: FormData) => {
+			handleForm({ data: formData });
+			return null;
+		},
+		null,
+	);
 
 	return (
 		<div className="flex items-center justify-center min-h-screen">
@@ -85,14 +81,9 @@ function RouteComponent() {
 									type="text"
 									required
 									placeholder="Username"
-									pattern="[A-Za-z][A-Za-z0-9\-]*"
-									minLength={3}
-									maxLength={30}
-									title="Only letters, numbers or dash"
 								/>
 							</label>
 						</div>
-
 						{/* Create Room */}
 						<button
 							type="submit"
@@ -103,9 +94,7 @@ function RouteComponent() {
 						>
 							{isPending ? "Processing..." : "Create new room"}
 						</button>
-
 						<div className="divider">OR</div>
-
 						{/* Join Existing Room */}
 						<div className="flex flex-col gap-2">
 							<label className="input flex items-center gap-2 w-full">
@@ -119,7 +108,6 @@ function RouteComponent() {
 								/>
 							</label>
 						</div>
-
 						<button
 							type="submit"
 							name={FormFieldsEnum.ACTION_TYPE}
