@@ -24,13 +24,11 @@ export class PokerRoomObject extends DurableObject<Env> {
 		`);
 	}
 
-	async hey(test: string) {
-		console.log(test);
-
-		return "hey";
-	}
-
 	async gameAction(event: PokerGameEvents) {
+		console.log(
+			"🔍 ~ gameAction ~ src/durable-objects/poker-room-do.ts:33 ~ event:",
+			event,
+		);
 		const query = this.sql.exec(
 			`SELECT game_state FROM poker_room WHERE id = 1`,
 		);
@@ -97,6 +95,8 @@ export class PokerRoomObject extends DurableObject<Env> {
 		const webSocketPair = new WebSocketPair();
 		const [client, server] = Object.values(webSocketPair);
 		this.ctx.acceptWebSocket(server);
+		console.log("connected");
+
 		return new Response(null, {
 			status: 101,
 			webSocket: client,

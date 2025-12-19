@@ -50,10 +50,15 @@ const useSubscribeToPlayers = ({ roomId }: { roomId: string }) => {
 		// is local dev
 		const isLocalDev = import.meta.env.DEV;
 
-		const WEBSOCKET_ENDPOINT = isLocalDev
-			? "ws://localhost:8787/ws/game-state/"
-			: "wss://chonk-planning-poker-backend.chiubaca.workers.dev/ws/game-state/";
-		const websocket = new WebSocket(`${WEBSOCKET_ENDPOINT}${roomId}`);
+		const host = window.location.host;
+
+		const WEBSOCKET_ENDPOINT = `${isLocalDev ? "ws://" : "wss://"}${host}/room/ws/${roomId}`;
+		console.log(
+			"🔍 ~ useEffect() callback ~ src/realtime-sync/GameRoom.provider.tsx:60 ~ WEBSOCKET_ENDPOINT:",
+			WEBSOCKET_ENDPOINT,
+		);
+
+		const websocket = new WebSocket(`${WEBSOCKET_ENDPOINT}`);
 
 		websocket.onopen = () => {
 			console.log("connected");
@@ -61,6 +66,10 @@ const useSubscribeToPlayers = ({ roomId }: { roomId: string }) => {
 
 		websocket.onmessage = (event) => {
 			const gameState = JSON.parse(event.data);
+			console.log(
+				"🔍 ~ useEffect() callback ~ src/realtime-sync/GameRoom.provider.tsx:68 ~ gameState:",
+				JSON.stringify(gameState),
+			);
 			setGameState(gameState);
 		};
 

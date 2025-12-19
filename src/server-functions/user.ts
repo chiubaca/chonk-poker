@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getCookies, setCookie } from "@tanstack/react-start/server";
-import z, { nanoid } from "zod";
+import { nanoid } from "nanoid";
+import z from "zod";
 
 export const USER_COOKIE_KEY_ENUM = {
 	USER_ID: "user_id",
@@ -15,7 +16,7 @@ const UserSchema = z.object({
 export const createNewUserServerFn = createServerFn()
 	.inputValidator(z.object({ userName: z.string() }))
 	.handler(({ data }) => {
-		const userId = nanoid().toString();
+		const userId = nanoid();
 
 		setCookie(USER_COOKIE_KEY_ENUM.USER_ID, userId);
 		setCookie(USER_COOKIE_KEY_ENUM.USERNAME, data.userName);

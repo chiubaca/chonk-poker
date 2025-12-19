@@ -118,39 +118,25 @@ function GameRoomContent() {
 		event: React.MouseEvent<HTMLInputElement, MouseEvent>,
 	) => {
 		const optionValue = (event.target as HTMLInputElement).value;
+		console.log(
+			"🔍 ~ GameRoomContent ~ src/routes/room/$roomId.tsx:120 ~ optionValue:",
+			optionValue,
+		);
 
 		handleAction({
 			data: {
 				roomId,
 				pokerEvent: {
-					type: "player.lock",
+					type: "player.choose",
 					player: {
 						id: currentUserId,
 						name: currentUserName,
-						state: "locked-in",
+						state: "choosing",
 						choice: optionValue as Option,
 					},
 				},
 			},
 		});
-
-		// honoClient.action[":roomId"].$post(
-		// 	{
-		// 		param: { roomId },
-		// 		json: {
-		// 			type: "player.choose",
-		// 			player: {
-		// 				id: currentUserId,
-		// 				name: currentUserName,
-		// 				state: "locked-in",
-		// 				choice: optionValue as Option,
-		// 			},
-		// 		},
-		// 	},
-		// 	{
-		// 		headers: { "x-user-id": currentUserId, "x-user-name": currentUserName },
-		// 	},
-		// );
 	};
 
 	const [_formState, handleLockInAction, isPending] = useActionState(
