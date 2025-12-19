@@ -1,10 +1,10 @@
-import type { PlanningPokerMachineSnapshot } from "@chonk-planning-poker/shared";
 import {
 	createContext,
 	type PropsWithChildren,
 	useEffect,
 	useState,
 } from "react";
+import type { PlanningPokerMachineSnapshot } from "@/state-machine/planning-poker-machine";
 
 type GameRoomContext = {
 	roomId: string;

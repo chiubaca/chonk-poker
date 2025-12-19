@@ -61,15 +61,11 @@ export const Route = createFileRoute("/room/$roomId")({
 		const gameState = await getGameStateServerFn({
 			data: { roomId: params.roomId },
 		});
-		console.log(
-			"🔍 ~ loader ~ website/src/routes/room/$roomId.tsx:49 ~ gameState:",
-			gameState,
-		);
 
 		return {
 			userId,
 			userName,
-			gameState: JSON.parse(gameState),
+			gameState: gameState ? JSON.parse(gameState) : null,
 		};
 	},
 });
