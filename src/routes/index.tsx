@@ -1,5 +1,6 @@
 // /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 
+import { env } from "cloudflare:workers";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Hash as HashIcon, User as UserIcon } from "lucide-react";
@@ -34,16 +35,21 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 		};
 	})
 	.handler(async ({ data }) => {
-		const { userName, roomId, actionType } = data;
+		const { userName: newUserName, roomId, actionType } = data;
 
 		if (actionType === "create") {
 			console.log("handle create!");
 
-			await createNewUserServerFn({ data: { userName } });
+			const { userId, userName } = await createNewUserServerFn({
+				data: { userName: newUserName },
+			});
 
 			console.log("redirecting...");
 
-			const newRoomId = "p00p";
+			const newRoomId = "p00p"; //TODO make this dynamic!
+
+			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
+			stub.createRoom({ id: userId, name: userName });
 			throw redirect({
 				to: "/room/$roomId",
 				params: { roomId: newRoomId },
