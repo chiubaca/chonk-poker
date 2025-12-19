@@ -1,5 +1,6 @@
 // /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 import { createFileRoute } from "@tanstack/react-router";
+import { Hash as HashIcon, User as UserIcon } from "lucide-react";
 import { useActionState } from "react";
 
 export const Route = createFileRoute("/")({
@@ -70,73 +71,66 @@ function RouteComponent() {
 	});
 
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-gray-100">
-			<div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-				<h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-					Chonk Poker
-				</h1>
-
-				<form className="space-y-6" action={formAction}>
-					{/* Username Input */}
-					<div>
-						<label
-							htmlFor="username"
-							className="block text-sm font-medium text-gray-700 mb-2"
-						>
-							Username
-						</label>
-						<input
-							id={FormFieldsEnum.USER_NAME}
-							type="text"
-							placeholder="Enter your username"
-							className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-							required
-						/>
-					</div>
-
-					{/* Create Room */}
-					<button
-						type="submit"
-						name={FormFieldsEnum.ACTION_TYPE}
-						value="create"
-						className="w-full bg-blue-600 text-white py-3 rounded-md hover:bg-blue-700 transition-colors font-medium"
-					>
-						Create new room
-					</button>
-
-					<div className="relative">
-						<div className="absolute inset-0 flex items-center">
-							<div className="w-full border-t border-gray-300" />
+		<div className="flex items-center justify-center min-h-screen">
+			<div className="card card-border w-full max-w-md bg-accent-content">
+				<div className="card-body">
+					<form className="flex flex-col gap-4" action={formAction}>
+						{/* Username Input */}
+						<div className="flex flex-col ">
+							<label className="input validator flex items-center w-full">
+								<UserIcon className="w-4 h-4 opacity-70" />
+								<input
+									id={FormFieldsEnum.USER_NAME}
+									name={FormFieldsEnum.USER_NAME}
+									type="text"
+									required
+									placeholder="Username"
+									pattern="[A-Za-z][A-Za-z0-9\-]*"
+									minLength={3}
+									maxLength={30}
+									title="Only letters, numbers or dash"
+								/>
+							</label>
 						</div>
-						<div className="relative flex justify-center text-sm">
-							<span className="px-2 bg-white text-gray-500">OR</span>
-						</div>
-					</div>
 
-					{/* Join Existing Room */}
-					<div>
-						<label
-							htmlFor="roomId"
-							className="block text-sm font-medium text-gray-700 mb-2"
+						{/* Create Room */}
+						<button
+							type="submit"
+							name={FormFieldsEnum.ACTION_TYPE}
+							value="create"
+							className="btn btn-primary"
+							disabled={isPending}
 						>
-							Room ID
-						</label>
-						<input
-							id={FormFieldsEnum.ROOM_ID}
-							type="text"
-							placeholder="Enter room ID"
-							className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-						/>
-					</div>
-					<button
-						type="submit"
-						name={FormFieldsEnum.ACTION_TYPE}
-						value="join"
-						className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors font-medium"
-					>
-						Join Existing Room
-					</button>
-				</form>
+							{isPending ? "Processing..." : "Create new room"}
+						</button>
+
+						<div className="divider">OR</div>
+
+						{/* Join Existing Room */}
+						<div className="flex flex-col gap-2">
+							<label className="input flex items-center gap-2 w-full">
+								<HashIcon className="w-4 h-4 opacity-70" />
+								<input
+									id={FormFieldsEnum.ROOM_ID}
+									name={FormFieldsEnum.ROOM_ID}
+									type="text"
+									placeholder="Enter room ID"
+									className="grow"
+								/>
+							</label>
+						</div>
+
+						<button
+							type="submit"
+							name={FormFieldsEnum.ACTION_TYPE}
+							value="join"
+							className="btn btn-secondary"
+							disabled={isPending}
+						>
+							{isPending ? "Processing..." : "Join Existing Room"}
+						</button>
+					</form>
+				</div>
 			</div>
 		</div>
 	);
