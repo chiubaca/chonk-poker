@@ -1,14 +1,29 @@
 // /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
 
-import { env } from "cloudflare:workers";
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { Hash as HashIcon, User as UserIcon } from "lucide-react";
 import { useActionState } from "react";
-import { createNewUserServerFn } from "@/server-functions/user";
+
+import {
+	createFileRoute,
+	redirect,
+	useLoaderData,
+} from "@tanstack/react-router";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
+
+import { env } from "cloudflare:workers";
+
+import {
+	createNewUserServerFn,
+	getUserServerFn,
+	logoutUserServerFn,
+} from "@/server-functions/user";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,
+	loader: async () => {
+		const user = await getUserServerFn();
+		return { user };
+	},
 });
 
 const FormFieldsEnum = {
@@ -57,12 +72,23 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 		}
 
 		if (actionType === "join") {
+			if (!roomId) {
+				return;
+			}
+
 			console.log("not impleted yet...");
+			throw redirect({
+				to: "/room/$roomId",
+				params: { roomId },
+			});
 		}
 	});
 
 function RouteComponent() {
+	const { user } = useLoaderData({ from: "/" });
+
 	const handleForm = useServerFn(handleFormServerFn);
+	const logout = useServerFn(logoutUserServerFn);
 
 	const [_formState, formAction, isPending] = useActionState(
 		(_prevState: FormState, formData: FormData) => {
@@ -77,19 +103,36 @@ function RouteComponent() {
 			<div className="card card-border w-full max-w-md bg-accent-content">
 				<div className="card-body">
 					<form className="flex flex-col gap-4" action={formAction}>
-						{/* Username Input */}
-						<div className="flex flex-col ">
-							<label className="input validator flex items-center w-full">
-								<UserIcon className="w-4 h-4 opacity-70" />
-								<input
-									id={FormFieldsEnum.USER_NAME}
-									name={FormFieldsEnum.USER_NAME}
-									type="text"
-									required
-									placeholder="Username"
-								/>
-							</label>
-						</div>
+						{/* Username Input or User Greeting */}
+						{user ? (
+							<div className="flex justify-between items-center">
+								<div className="flex items-center gap-2">
+									<UserIcon className="w-4 h-4 opacity-70" />
+									<span>Hello, {user.userName}</span>
+								</div>
+								<button
+									type="button"
+									className="btn btn-ghost btn-xs"
+									onClick={async () => await logout()}
+								>
+									Logout
+								</button>
+							</div>
+						) : (
+							<div className="flex flex-col ">
+								<label className="input validator flex items-center w-full">
+									<UserIcon className="w-4 h-4 opacity-70" />
+									<input
+										id={FormFieldsEnum.USER_NAME}
+										name={FormFieldsEnum.USER_NAME}
+										type="text"
+										required
+										placeholder="Username"
+									/>
+								</label>
+							</div>
+						)}
+
 						{/* Create Room */}
 						<button
 							type="submit"

@@ -1,7 +1,9 @@
-import { createServerFn } from "@tanstack/react-start";
-import { getCookies, setCookie } from "@tanstack/react-start/server";
 import { nanoid } from "nanoid";
 import z from "zod";
+
+import { redirect } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { getCookies, setCookie } from "@tanstack/react-start/server";
 
 export const USER_COOKIE_KEY_ENUM = {
 	USER_ID: "user_id",
@@ -33,8 +35,26 @@ export const setUserServerFn = createServerFn()
 export const getUserServerFn = createServerFn().handler(() => {
 	const cookies = getCookies();
 
+	if (
+		!cookies[USER_COOKIE_KEY_ENUM.USER_ID] ||
+		!cookies[USER_COOKIE_KEY_ENUM.USERNAME]
+	) {
+		return null;
+	}
+
 	return {
 		userName: cookies[USER_COOKIE_KEY_ENUM.USERNAME],
 		userId: cookies[USER_COOKIE_KEY_ENUM.USER_ID],
 	};
+});
+
+export const logoutUserServerFn = createServerFn().handler(() => {
+	setCookie(USER_COOKIE_KEY_ENUM.USER_ID, "", {
+		expires: new Date(0),
+	});
+	setCookie(USER_COOKIE_KEY_ENUM.USERNAME, "", {
+		expires: new Date(0),
+	});
+
+	throw redirect({ to: "/" });
 });
