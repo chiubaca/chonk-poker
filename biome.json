@@ -20,7 +20,33 @@
 		"enabled": true,
 		"indentStyle": "tab"
 	},
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							{
+								"type": false,
+								"source": ["react", ":PACKAGE:", "!@tanstack/**"]
+							},
+							":BLANK_LINE:",
+							{ "type": false, "source": ["@tanstack/**"] },
+							":BLANK_LINE:",
+							{ "type": false, "source": ["cloudflare:*"] },
+							":BLANK_LINE:",
+							{ "type": false, "source": [":ALIAS:"] },
+							":BLANK_LINE:",
+							{ "type": false, "source": ["../**"] },
+							":BLANK_LINE:"
+						]
+					}
+				}
+			}
+		}
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {

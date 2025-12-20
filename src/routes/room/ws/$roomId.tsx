@@ -1,10 +1,11 @@
-import { env } from "cloudflare:workers";
 import { createFileRoute } from "@tanstack/react-router";
+
+import { env } from "cloudflare:workers";
 
 export const Route = createFileRoute("/room/ws/$roomId")({
 	server: {
 		handlers: {
-			GET: async ({ request, params, context }) => {
+			GET: async ({ request, params }) => {
 				const roomId = params.roomId;
 				if (!roomId) {
 					return new Response("no room id found", { status: 404 });

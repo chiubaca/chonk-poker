@@ -1,25 +1,26 @@
-// import type { Option } from "@chonk-planning-poker/shared";
-
-import { env } from "cloudflare:workers";
-import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { useActionState, useContext } from "react";
 import z from "zod";
-// import { honoClient } from "@/lib/hono-rpc";
-// import { getUserServerFn } from "@/lib/user";
+
+import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
+
+import { env } from "cloudflare:workers";
+
 import {
 	GameRoomContext,
 	GameRoomProvider,
 } from "@/realtime-sync/GameRoom.provider";
 import { getUserServerFn } from "@/server-functions/user";
 import { pokerEventsSchema } from "@/state-machine/planning-poker-machine.schemas";
-import type { Option } from "@/state-machine/planning-poker-machine.types";
+
 import chonkOne from "../../assets/chonk-1.png";
 import chonkTwo from "../../assets/chonk-2.png";
 import chonkThree from "../../assets/chonk-3.png";
 import chonkFour from "../../assets/chonk-4.png";
 import chonkFive from "../../assets/chonk-5.png";
 import chonkSix from "../../assets/chonk-6.png";
+
+import type { Option } from "@/state-machine/planning-poker-machine.types";
 
 const chonkImages: { src: string; label: string; value: Option }[] = [
 	{ src: chonkOne, label: "A Fine Boi", value: "a-fine-boi" },

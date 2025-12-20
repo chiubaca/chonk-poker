@@ -1,7 +1,7 @@
 export const ThemeSwitcher = () => {
 	return (
 		<div className="dropdown mb-72">
-			<button tabIndex={0} role="button" className="btn m-1">
+			<button tabIndex={0} type="button" className="btn m-1">
 				Theme
 				<svg
 					width="12px"
