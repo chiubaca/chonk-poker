@@ -1,7 +1,7 @@
 import { useActionState, useContext } from "react";
 import z from "zod";
 
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
@@ -10,8 +10,8 @@ import {
 	GameRoomContext,
 	GameRoomProvider,
 } from "@/realtime-sync/GameRoom.provider";
+import { handleGameActionServerFn } from "@/server-functions/game-room";
 import { getUserServerFn } from "@/server-functions/user";
-import { pokerEventsSchema } from "@/state-machine/planning-poker-machine.schemas";
 
 import chonkOne from "../../assets/chonk-1.png";
 import chonkTwo from "../../assets/chonk-2.png";
@@ -40,19 +40,6 @@ const getGameStateServerFn = createServerFn()
 		const gameState = await stub.getGameState();
 
 		return gameState;
-	});
-
-const handleGameActionServerFn = createServerFn()
-	.inputValidator(
-		z.object({
-			pokerEvent: pokerEventsSchema,
-			roomId: z.string(),
-		}),
-	)
-	.handler(async ({ context, data }) => {
-		const { pokerEvent, roomId } = data;
-		const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
-		await stub.gameAction({ player: pokerEvent.player, type: pokerEvent.type });
 	});
 
 export const Route = createFileRoute("/room/$roomId")({

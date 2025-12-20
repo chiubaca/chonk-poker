@@ -52,19 +52,29 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 	.handler(async ({ data }) => {
 		const { userName: newUserName, roomId, actionType } = data;
 
+		const loggedInUser = await getUserServerFn();
+
+		const newRoomId = "p00p"; //TODO make this dynamic!
+
 		if (actionType === "create") {
-			console.log("handle create!");
-
-			const { userId, userName } = await createNewUserServerFn({
-				data: { userName: newUserName },
-			});
-
-			console.log("redirecting...");
-
-			const newRoomId = "p00p"; //TODO make this dynamic!
-
+			// create a new user if no logged in user is detected
 			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
-			await stub.createRoom({ id: userId, name: userName });
+			if (!loggedInUser) {
+				const { userId: newUserId } = await createNewUserServerFn({
+					data: { userName: newUserName },
+				});
+
+				await stub.createRoom({ id: newUserId, name: newUserName });
+				throw redirect({
+					to: "/room/$roomId",
+					params: { roomId: newRoomId },
+				});
+			}
+
+			await stub.createRoom({
+				id: loggedInUser.userId,
+				name: loggedInUser.userName,
+			});
 			throw redirect({
 				to: "/room/$roomId",
 				params: { roomId: newRoomId },
@@ -73,13 +83,38 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 
 		if (actionType === "join") {
 			if (!roomId) {
-				return;
+				throw new Error("No room id was provided");
 			}
 
-			console.log("not impleted yet...");
+			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
+			if (!loggedInUser) {
+				const { userId: newUserId } = await createNewUserServerFn({
+					data: { userName: newUserName },
+				});
+
+				await stub.gameAction({
+					player: { id: newUserId, name: newUserName, state: "choosing" },
+					type: "player.join",
+				});
+
+				throw redirect({
+					to: "/room/$roomId",
+					params: { roomId: newRoomId },
+				});
+			}
+
+			await stub.gameAction({
+				player: {
+					id: loggedInUser.userId,
+					name: loggedInUser.userName,
+					state: "choosing",
+				},
+				type: "player.join",
+			});
+
 			throw redirect({
 				to: "/room/$roomId",
-				params: { roomId },
+				params: { roomId: newRoomId },
 			});
 		}
 	});
