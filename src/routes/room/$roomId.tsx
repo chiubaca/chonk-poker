@@ -42,17 +42,17 @@ const getGameStateServerFn = createServerFn()
 		return gameState;
 	});
 
-const handeGameActionServerFn = createServerFn()
+const handleGameActionServerFn = createServerFn()
 	.inputValidator(
 		z.object({
 			pokerEvent: pokerEventsSchema,
 			roomId: z.string(),
 		}),
 	)
-	.handler(({ context, data }) => {
+	.handler(async ({ context, data }) => {
 		const { pokerEvent, roomId } = data;
 		const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
-		stub.gameAction({ player: pokerEvent.player, type: pokerEvent.type });
+		await stub.gameAction({ player: pokerEvent.player, type: pokerEvent.type });
 	});
 
 export const Route = createFileRoute("/room/$roomId")({
@@ -91,7 +91,7 @@ function GameRoomContent() {
 	const { roomId, gameState, currentUserId, currentUserName } =
 		useContext(GameRoomContext);
 
-	const handleAction = useServerFn(handeGameActionServerFn);
+	const handleAction = useServerFn(handleGameActionServerFn);
 
 	const handleLockIn = (_previousState: unknown, _formData: FormData) => {
 		handleAction({
@@ -110,15 +110,10 @@ function GameRoomContent() {
 		return { success: true };
 	};
 
-	// TODO: this should send an action to backend!!
 	const onChonkSelection = (
 		event: React.MouseEvent<HTMLInputElement, MouseEvent>,
 	) => {
 		const optionValue = (event.target as HTMLInputElement).value;
-		console.log(
-			"🔍 ~ GameRoomContent ~ src/routes/room/$roomId.tsx:120 ~ optionValue:",
-			optionValue,
-		);
 
 		handleAction({
 			data: {
@@ -169,7 +164,7 @@ function GameRoomContent() {
 						<div className="card bg-base-100 shadow-xl">
 							<div className="card-body">
 								<h2 className="card-title justify-center mb-6 text-2xl">
-									Choose your Chonk Level
+									Choose your Chonk Level...
 								</h2>
 								<form action={handleLockInAction}>
 									<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
