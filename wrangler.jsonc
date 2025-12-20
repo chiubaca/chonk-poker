@@ -17,5 +17,8 @@
 				"name": "POKER_ROOM_DURABLE_OBJECT"
 			}
 		]
-	}, 
+	},
+  "observability": {
+    "enabled": true
+  }
 }
