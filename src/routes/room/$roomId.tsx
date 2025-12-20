@@ -1,7 +1,7 @@
 import { useActionState, useContext } from "react";
 import z from "zod";
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
@@ -58,14 +58,13 @@ const handleGameActionServerFn = createServerFn()
 export const Route = createFileRoute("/room/$roomId")({
 	component: RouteComponent,
 	loader: async ({ params }) => {
-		const { userId, userName } = await getUserServerFn();
+		const user = await getUserServerFn();
 		const gameState = await getGameStateServerFn({
 			data: { roomId: params.roomId },
 		});
 
 		return {
-			userId,
-			userName,
+			user,
 			gameState: gameState ? JSON.parse(gameState) : null,
 		};
 	},
@@ -73,13 +72,12 @@ export const Route = createFileRoute("/room/$roomId")({
 
 function RouteComponent() {
 	const { roomId } = Route.useParams();
-	const { userId, userName, gameState } = Route.useLoaderData();
+	const { user, gameState } = Route.useLoaderData();
 
 	return (
 		<GameRoomProvider
 			roomId={roomId}
-			currentUserId={userId}
-			currentUserName={userName}
+			user={user || undefined}
 			gameState={gameState}
 		>
 			<GameRoomContent />
@@ -88,20 +86,24 @@ function RouteComponent() {
 }
 
 function GameRoomContent() {
-	const { roomId, gameState, currentUserId, currentUserName } =
-		useContext(GameRoomContext);
+	const { roomId, gameState, user } = useContext(GameRoomContext);
 
 	const handleAction = useServerFn(handleGameActionServerFn);
 
 	const handleLockIn = (_previousState: unknown, _formData: FormData) => {
+		if (!user) {
+			console.log("spectator cant do this");
+			return;
+		}
+
 		handleAction({
 			data: {
 				roomId,
 				pokerEvent: {
 					type: "player.lock",
 					player: {
-						id: currentUserId,
-						name: currentUserName,
+						id: user.userId,
+						name: user.userName,
 						state: "locked-in",
 					},
 				},
@@ -113,6 +115,11 @@ function GameRoomContent() {
 	const onChonkSelection = (
 		event: React.MouseEvent<HTMLInputElement, MouseEvent>,
 	) => {
+		if (!user) {
+			console.log("spectator cant do this");
+			return;
+		}
+
 		const optionValue = (event.target as HTMLInputElement).value;
 
 		handleAction({
@@ -121,8 +128,8 @@ function GameRoomContent() {
 				pokerEvent: {
 					type: "player.choose",
 					player: {
-						id: currentUserId,
-						name: currentUserName,
+						id: user.userId,
+						name: user.userName,
 						state: "choosing",
 						choice: optionValue as Option,
 					},
@@ -152,7 +159,7 @@ function GameRoomContent() {
 				<div className="flex-none gap-4">
 					<div className="badge badge-neutral">Room: {roomId}</div>
 					<div className="badge badge-primary">
-						👤 {currentUserName || "Anonymous"}
+						👤 {user?.userName || "Spectating"}
 					</div>
 				</div>
 			</div>

@@ -4,27 +4,25 @@ import {
 	useEffect,
 	useState,
 } from "react";
+
 import type { PlanningPokerMachineSnapshot } from "@/state-machine/planning-poker-machine";
 
 type GameRoomContext = {
 	roomId: string;
-	currentUserId: string;
-	currentUserName: string;
+	user?: { userId: string; userName: string };
 	gameState?: PlanningPokerMachineSnapshot;
 };
 
 export const GameRoomContext = createContext<GameRoomContext>({
 	roomId: "",
-	currentUserId: "",
-	currentUserName: "",
+	user: undefined,
 	gameState: undefined,
 });
 
 export const GameRoomProvider = ({
 	roomId,
 	gameState,
-	currentUserId,
-	currentUserName,
+	user,
 	children,
 }: PropsWithChildren<GameRoomContext>) => {
 	const { gameState: freshGameState } = useSubscribeToPlayers({ roomId });
@@ -33,8 +31,7 @@ export const GameRoomProvider = ({
 		<GameRoomContext.Provider
 			value={{
 				roomId,
-				currentUserId,
-				currentUserName,
+				user,
 				gameState: freshGameState ?? gameState,
 			}}
 		>
@@ -47,16 +44,12 @@ const useSubscribeToPlayers = ({ roomId }: { roomId: string }) => {
 	const [gameState, setGameState] = useState(undefined);
 
 	useEffect(() => {
-		// is local dev
 		const isLocalDev = import.meta.env.DEV;
 
 		const host = window.location.host;
 
 		const WEBSOCKET_ENDPOINT = `${isLocalDev ? "ws://" : "wss://"}${host}/room/ws/${roomId}`;
-		console.log(
-			"🔍 ~ useEffect() callback ~ src/realtime-sync/GameRoom.provider.tsx:60 ~ WEBSOCKET_ENDPOINT:",
-			WEBSOCKET_ENDPOINT,
-		);
+		console.log("WS connected: ", WEBSOCKET_ENDPOINT);
 
 		const websocket = new WebSocket(`${WEBSOCKET_ENDPOINT}`);
 
@@ -66,10 +59,7 @@ const useSubscribeToPlayers = ({ roomId }: { roomId: string }) => {
 
 		websocket.onmessage = (event) => {
 			const gameState = JSON.parse(event.data);
-			console.log(
-				"🔍 ~ useEffect() callback ~ src/realtime-sync/GameRoom.provider.tsx:68 ~ gameState:",
-				JSON.stringify(gameState),
-			);
+			console.log("🔍 gameState:", JSON.stringify(gameState));
 			setGameState(gameState);
 		};
 
