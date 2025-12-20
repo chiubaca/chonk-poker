@@ -49,7 +49,7 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 			const newRoomId = "p00p"; //TODO make this dynamic!
 
 			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
-			stub.createRoom({ id: userId, name: userName });
+			await stub.createRoom({ id: userId, name: userName });
 			throw redirect({
 				to: "/room/$roomId",
 				params: { roomId: newRoomId },
