@@ -28,10 +28,6 @@ export class PokerRoomObject extends DurableObject<Env> {
 	}
 
 	async gameAction(event: PokerGameEvents) {
-		console.log(
-			"🔍 ~ gameAction ~ src/durable-objects/poker-room-do.ts:33 ~ event:",
-			event,
-		);
 		const query = this.sql.exec(
 			`SELECT game_state FROM poker_room WHERE id = 1`,
 		);
