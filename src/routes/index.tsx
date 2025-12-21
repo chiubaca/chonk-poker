@@ -1,7 +1,5 @@
-// /** biome-ignore-all lint/correctness/useUniqueElementIds: <explanation> */
-
-import { Hash as HashIcon, User as UserIcon } from "lucide-react";
 import { useActionState } from "react";
+import { Hash as HashIcon, User as UserIcon } from "lucide-react";
 
 import {
 	createFileRoute,

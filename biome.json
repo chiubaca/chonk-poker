@@ -28,9 +28,10 @@
 					"level": "on",
 					"options": {
 						"groups": [
+							{ "type": false, "source": ["react"] },
 							{
 								"type": false,
-								"source": ["react", ":PACKAGE:", "!@tanstack/**"]
+								"source": [":PACKAGE:", "!@tanstack/**"]
 							},
 							":BLANK_LINE:",
 							{ "type": false, "source": ["@tanstack/**"] },
