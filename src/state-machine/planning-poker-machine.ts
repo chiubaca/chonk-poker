@@ -1,5 +1,6 @@
 import { produce } from "immer";
 import { assign, type SnapshotFrom, setup } from "xstate";
+
 import type {
 	PokerGameContext,
 	PokerGameEvents,
@@ -36,7 +37,10 @@ export const planningPokerMachine = setup({
 				"player.join": {
 					actions: assign(({ context, event }) =>
 						produce(context, (draft) => {
-							draft.players = [...draft.players, event.player];
+							// ensure no duplicate players
+							const playersMap = new Map(draft.players.map((p) => [p.id, p]));
+							playersMap.set(event.player.id, event.player);
+							draft.players = Array.from(playersMap.values());
 						}),
 					),
 				},
