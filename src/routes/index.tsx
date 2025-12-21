@@ -144,7 +144,7 @@ function RouteComponent() {
 
 	return (
 		<div className="flex items-center justify-center min-h-screen">
-			<div className="card card-border w-full max-w-md bg-accent-content">
+			<div className="card card-border w-full max-w-md bg-base-300">
 				<div className="card-body">
 					<form className="flex flex-col gap-4" action={formAction}>
 						{/* Username Input or User Greeting */}
@@ -156,7 +156,7 @@ function RouteComponent() {
 								</div>
 								<button
 									type="button"
-									className="btn btn-ghost btn-xs"
+									className="btn btn-ghost btn-xs "
 									onClick={async () => await logout()}
 								>
 									Logout
