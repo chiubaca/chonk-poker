@@ -18,6 +18,15 @@
 			}
 		]
 	},
+	"d1_databases": [
+		{
+			"database_name": "chonk_poker_db",
+			"database_id": "2bcc116e-0cae-4cda-a1bd-d70c61b65428",
+			"binding": "CHONK_POKER_DB",
+			"migrations_dir": "drizzle/migrations",
+			"remote": true
+		}
+	],
   "observability": {
     "enabled": true
   }

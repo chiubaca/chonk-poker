@@ -10,6 +10,8 @@ import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
+import { roomTable } from "@/drizzle/schema";
+import { getDb } from "@/lib/database";
 import {
 	createNewUserServerFn,
 	getUserServerFn,
@@ -68,6 +70,22 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 
 		const handleCreateRoom = async (user: { id: string; name: string }) => {
 			const newRoomId = "p00p"; // TODO: make this dynamic!
+
+			const db = getDb();
+			await db
+				.insert(roomTable)
+				.values({
+					id: newRoomId,
+					status: "live",
+				})
+				.onConflictDoUpdate({
+					target: roomTable.id,
+					set: {
+						id: newRoomId,
+						status: "live",
+					},
+				});
+
 			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
 			await stub.createRoom(user);
 			return newRoomId;
