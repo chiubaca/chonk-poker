@@ -51,72 +51,65 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 	})
 	.handler(async ({ data }) => {
 		const { userName: newUserName, roomId, actionType } = data;
-
 		const loggedInUser = await getUserServerFn();
 
-		const newRoomId = "p00p"; //TODO make this dynamic!
-
-		if (actionType === "create") {
-			// create a new user if no logged in user is detected
-			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
-			if (!loggedInUser) {
-				const { userId: newUserId } = await createNewUserServerFn({
-					data: { userName: newUserName },
-				});
-
-				await stub.createRoom({ id: newUserId, name: newUserName });
-				throw redirect({
-					to: "/room/$roomId",
-					params: { roomId: newRoomId },
-				});
+		// Helper functions
+		const getOrCreateUser = async (
+			newUserName: string,
+			loggedInUser: { userId: string; userName: string } | null,
+		) => {
+			if (loggedInUser) {
+				return { id: loggedInUser.userId, name: loggedInUser.userName };
 			}
 
-			await stub.createRoom({
-				id: loggedInUser.userId,
-				name: loggedInUser.userName,
+			const { userId: newUserId } = await createNewUserServerFn({
+				data: { userName: newUserName },
 			});
-			throw redirect({
-				to: "/room/$roomId",
-				params: { roomId: newRoomId },
-			});
-		}
+			return { id: newUserId, name: newUserName };
+		};
 
-		if (actionType === "join") {
+		const handleCreateRoom = async (user: { id: string; name: string }) => {
+			const newRoomId = "p00p"; // TODO: make this dynamic!
+			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
+			await stub.createRoom(user);
+			return newRoomId;
+		};
+
+		const handleJoinRoom = async (
+			user: { id: string; name: string },
+			roomId: string,
+		) => {
 			if (!roomId) {
 				throw new Error("No room id was provided");
 			}
 
 			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
-			if (!loggedInUser) {
-				const { userId: newUserId } = await createNewUserServerFn({
-					data: { userName: newUserName },
-				});
-
-				await stub.gameAction({
-					player: { id: newUserId, name: newUserName, state: "choosing" },
-					type: "player.join",
-				});
-
-				throw redirect({
-					to: "/room/$roomId",
-					params: { roomId: newRoomId },
-				});
-			}
-
 			await stub.gameAction({
-				player: {
-					id: loggedInUser.userId,
-					name: loggedInUser.userName,
-					state: "choosing",
-				},
+				player: { ...user, state: "choosing" },
 				type: "player.join",
 			});
+			return "p00p"; // TODO: should return the actual roomId
+		};
 
-			throw redirect({
-				to: "/room/$roomId",
-				params: { roomId: newRoomId },
-			});
+		const user = await getOrCreateUser(newUserName, loggedInUser);
+
+		let targetRoomId: string;
+
+		switch (actionType) {
+			case "create":
+				targetRoomId = await handleCreateRoom(user);
+				break;
+			case "join":
+				targetRoomId = await handleJoinRoom(user, roomId);
+				break;
+			default:
+				throw new Error(`Unknown action type: ${actionType}`);
 		}
+
+		throw redirect({
+			to: "/room/$roomId",
+			params: { roomId: targetRoomId },
+		});
 	});
 
 function RouteComponent() {
