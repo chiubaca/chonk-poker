@@ -1,9 +1,67 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "ce1c88e2-bc1a-4340-b771-ec8ac568e2f5",
-  "prevId": "e4ea4af0-a44e-443b-90bf-5675e415d456",
+  "id": "c518a90d-f82b-4784-871b-89d7dd7bb4d6",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "usersToRooms": {
+      "name": "usersToRooms",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "room_id": {
+          "name": "room_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "usersToRooms_user_id_user_id_fk": {
+          "name": "usersToRooms_user_id_user_id_fk",
+          "tableFrom": "usersToRooms",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "usersToRooms_room_id_room_id_fk": {
+          "name": "usersToRooms_room_id_room_id_fk",
+          "tableFrom": "usersToRooms",
+          "tableTo": "room",
+          "columnsFrom": [
+            "room_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "room": {
       "name": "room",
       "columns": {
