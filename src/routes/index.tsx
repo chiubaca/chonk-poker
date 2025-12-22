@@ -11,6 +11,7 @@ import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { env } from "cloudflare:workers";
 
 import { roomTable } from "@/drizzle/schema";
+import { authClient, signIn } from "@/lib/auth-client";
 import { getDb } from "@/lib/database";
 import {
 	createNewUserServerFn,
@@ -141,6 +142,31 @@ function RouteComponent() {
 		},
 		null,
 	);
+	const {
+		data: session,
+		isPending: isAuthPending, //loading state
+		// error: authError, //error object
+		// refetch: refetchAuth, //refetch the session
+	} = authClient.useSession();
+
+	console.log({ session, isAuthPending });
+
+	if (!session) {
+		return (
+			<button
+				onClick={async () => {
+					await signIn();
+				}}
+				type="submit"
+				// name={FormFieldsEnum.ACTION_TYPE}
+				value="create"
+				className="btn btn-primary"
+				// disabled={isPending}
+			>
+				sign in with google
+			</button>
+		);
+	}
 
 	return (
 		<div className="flex items-center justify-center min-h-screen">
@@ -187,6 +213,7 @@ function RouteComponent() {
 						>
 							{isPending ? "Processing..." : "Create new room"}
 						</button>
+
 						<div className="divider">OR</div>
 						{/* Join Existing Room */}
 						<div className="flex flex-col gap-2">
