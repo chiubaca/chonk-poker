@@ -1,4 +1,5 @@
-import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { nanoid } from "nanoid";
 
 import { user } from "./auth-schema";
 
@@ -9,8 +10,10 @@ export const roomTable = sqliteTable("room", {
 	status: text(),
 });
 
-export const newUsersToRooms = sqliteTable("usersToRooms", {
-	id: text().primaryKey().notNull(),
+export const newUsersToRoomsTable = sqliteTable("usersToRooms", {
+	id: text()
+		.primaryKey()
+		.$defaultFn(() => nanoid()),
 	userId: text("user_id")
 		.notNull()
 		.references(() => user.id),

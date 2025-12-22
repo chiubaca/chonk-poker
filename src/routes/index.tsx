@@ -1,24 +1,22 @@
 import { useActionState } from "react";
 import { Hash as HashIcon, User as UserIcon } from "lucide-react";
+import { nanoid } from "nanoid";
 
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
-import { roomTable } from "@/drizzle/schema";
+import { newUsersToRoomsTable, roomTable } from "@/drizzle/schema";
 import { authClient, signIn, signOut } from "@/lib/auth-client";
 import { getDb } from "@/lib/database";
-import {
-	createNewUserServerFn,
-	getUserServerFn,
-} from "@/server-functions/user";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,
 });
 
 const FormFieldsEnum = {
+	USER_ID: "userID",
 	USER_NAME: "userName",
 	ROOM_ID: "roomId",
 	ACTION_TYPE: "actionType",
@@ -37,33 +35,18 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 
 		return {
 			userName: formData.get(FormFieldsEnum.USER_NAME)?.toString() || "",
+			userId: formData.get(FormFieldsEnum.USER_ID)?.toString() || "",
 			roomId: formData.get(FormFieldsEnum.ROOM_ID)?.toString() || "",
 			actionType: formData.get(FormFieldsEnum.ACTION_TYPE)?.toString() || "",
 		};
 	})
 	.handler(async ({ data }) => {
-		const { userName: newUserName, roomId, actionType } = data;
-		const loggedInUser = await getUserServerFn();
-
-		// Helper functions
-		const getOrCreateUser = async (
-			newUserName: string,
-			loggedInUser: { userId: string; userName: string } | null,
-		) => {
-			if (loggedInUser) {
-				return { id: loggedInUser.userId, name: loggedInUser.userName };
-			}
-
-			const { userId: newUserId } = await createNewUserServerFn({
-				data: { userName: newUserName },
-			});
-			return { id: newUserId, name: newUserName };
-		};
+		const { userId, userName, roomId, actionType } = data;
 
 		const handleCreateRoom = async (user: { id: string; name: string }) => {
-			const newRoomId = "p00p"; // TODO: make this dynamic!
-
+			const newRoomId = nanoid(5).toUpperCase();
 			const db = getDb();
+
 			await db
 				.insert(roomTable)
 				.values({
@@ -77,6 +60,9 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 						status: "live",
 					},
 				});
+			await db
+				.insert(newUsersToRoomsTable)
+				.values({ roomId: newRoomId, userId });
 
 			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
 			await stub.createRoom(user);
@@ -91,24 +77,28 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 				throw new Error("No room id was provided");
 			}
 
+			const db = getDb();
+			await db.insert(newUsersToRoomsTable).values({ roomId, userId });
+
 			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
 			await stub.gameAction({
 				player: { ...user, state: "choosing" },
 				type: "player.join",
 			});
-			return "p00p"; // TODO: should return the actual roomId
+			return roomId;
 		};
-
-		const user = await getOrCreateUser(newUserName, loggedInUser);
 
 		let targetRoomId: string;
 
 		switch (actionType) {
 			case "create":
-				targetRoomId = await handleCreateRoom(user);
+				targetRoomId = await handleCreateRoom({ id: userId, name: userName });
 				break;
 			case "join":
-				targetRoomId = await handleJoinRoom(user, roomId);
+				targetRoomId = await handleJoinRoom(
+					{ id: userId, name: userName },
+					roomId,
+				);
 				break;
 			default:
 				throw new Error(`Unknown action type: ${actionType}`);
@@ -198,6 +188,14 @@ function RouteComponent() {
 								<UserIcon className="w-4 h-4 opacity-70" />
 								<span>Hello, {session.user.name}</span>
 							</div>
+
+							<input
+								hidden
+								id={FormFieldsEnum.USER_ID}
+								name={FormFieldsEnum.USER_ID}
+								type="text"
+								value={session.user.id}
+							/>
 							<button
 								type="button"
 								className="btn btn-ghost btn-xs "
