@@ -1,4 +1,5 @@
 import { useActionState } from "react";
+import { and, eq } from "drizzle-orm";
 import { Hash as HashIcon, User as UserIcon } from "lucide-react";
 import { nanoid } from "nanoid";
 
@@ -78,7 +79,23 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 			}
 
 			const db = getDb();
-			await db.insert(newUsersToRoomsTable).values({ roomId, userId });
+
+			// Check if user is already in the room
+			const existingRecord = await db
+				.select()
+				.from(newUsersToRoomsTable)
+				.where(
+					and(
+						eq(newUsersToRoomsTable.roomId, roomId),
+						eq(newUsersToRoomsTable.userId, userId),
+					),
+				)
+				.limit(1);
+
+			// Only insert if no existing record
+			if (existingRecord.length === 0) {
+				await db.insert(newUsersToRoomsTable).values({ roomId, userId });
+			}
 
 			const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
 			await stub.gameAction({
