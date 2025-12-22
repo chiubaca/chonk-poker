@@ -208,6 +208,13 @@ function RouteComponent() {
 
 							<input
 								hidden
+								id={FormFieldsEnum.USER_NAME}
+								name={FormFieldsEnum.USER_NAME}
+								type="text"
+								value={session.user.name}
+							/>
+							<input
+								hidden
 								id={FormFieldsEnum.USER_ID}
 								name={FormFieldsEnum.USER_ID}
 								type="text"

@@ -6,12 +6,12 @@ import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
+import { authClient } from "@/lib/auth-client";
 import {
 	GameRoomContext,
 	GameRoomProvider,
 } from "@/realtime-sync/GameRoom.provider";
 import { handleGameActionServerFn } from "@/server-functions/game-room";
-import { getUserServerFn } from "@/server-functions/user";
 
 import chonkOne from "../../assets/chonk-1.png";
 import chonkTwo from "../../assets/chonk-2.png";
@@ -45,13 +45,11 @@ const getGameStateServerFn = createServerFn()
 export const Route = createFileRoute("/room/$roomId")({
 	component: RouteComponent,
 	loader: async ({ params }) => {
-		const user = await getUserServerFn();
 		const gameState = await getGameStateServerFn({
 			data: { roomId: params.roomId },
 		});
 
 		return {
-			user,
 			gameState: gameState ? JSON.parse(gameState) : null,
 		};
 	},
@@ -59,14 +57,20 @@ export const Route = createFileRoute("/room/$roomId")({
 
 function RouteComponent() {
 	const { roomId } = Route.useParams();
-	const { user, gameState } = Route.useLoaderData();
+	const { gameState } = Route.useLoaderData();
 
+	const { data: session } = authClient.useSession();
+
+	const user = session
+		? { userId: session.user.id, userName: session.user.name }
+		: undefined;
+
+	console.log(
+		"🔍 ~ RouteComponent ~ src/routes/room/$roomId.tsx:72 ~ user:",
+		user,
+	);
 	return (
-		<GameRoomProvider
-			roomId={roomId}
-			user={user || undefined}
-			gameState={gameState}
-		>
+		<GameRoomProvider roomId={roomId} user={user} gameState={gameState}>
 			<GameRoomContent />
 		</GameRoomProvider>
 	);
@@ -74,6 +78,10 @@ function RouteComponent() {
 
 function GameRoomContent() {
 	const { roomId, gameState, user } = useContext(GameRoomContext);
+	console.log(
+		"🔍 ~ GameRoomContent ~ src/routes/room/$roomId.tsx:83 ~ gameState:",
+		gameState,
+	);
 
 	const handleAction = useServerFn(handleGameActionServerFn);
 
