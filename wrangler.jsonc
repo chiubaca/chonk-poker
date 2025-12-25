@@ -27,6 +27,11 @@
 			"remote": true
 		}
 	],
+	"routes": [{
+		"pattern": "chonk-poker.chiubaca.com",
+		"zone_name": "chiubaca.com",
+		"custom_domain": true
+	}],
   "observability": {
     "enabled": true
   }
