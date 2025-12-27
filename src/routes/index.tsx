@@ -8,6 +8,7 @@ import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
+import { UserRoomsList } from "@/components/UserRoomsList";
 import { newUsersToRoomsTable, roomTable } from "@/drizzle/schema";
 import { authClient, signIn, signOut } from "@/lib/auth-client";
 import { getDb } from "@/lib/database";
@@ -196,8 +197,8 @@ function RouteComponent() {
 	}
 
 	return (
-		<div className="flex items-center justify-center min-h-screen">
-			<div className="card card-border w-full max-w-md bg-base-300">
+		<div className="flex flex-col items-center gap-4">
+			<div className="card card-border w-full max-w-md bg-base-300 mt-[30vh]">
 				<div className="card-body">
 					<form className="flex flex-col gap-4" action={formAction}>
 						<div className="flex justify-between items-center">
@@ -265,6 +266,10 @@ function RouteComponent() {
 						</button>
 					</form>
 				</div>
+			</div>
+
+			<div className="min-w-md">
+				<UserRoomsList />
 			</div>
 		</div>
 	);
