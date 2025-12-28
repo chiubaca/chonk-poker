@@ -19,9 +19,13 @@ export const planningPokerMachine = setup({
 	guards: {
 		allPlayersLockedIn: ({ context }) => {
 			return (
-				context.players.length > 0 &&
+				context.players.length >= 2 &&
 				context.players.every((player) => player.state === "locked-in")
 			);
+		},
+		playerHasChoice: ({ context, event }) => {
+			const player = context.players.find((p) => p.id === event.player.id);
+			return !!player?.choice;
 		},
 	},
 }).createMachine({
@@ -68,7 +72,7 @@ export const planningPokerMachine = setup({
 							}
 						}),
 					),
-					guard: ({ context }) => context.players.length > 0,
+					guard: { type: "playerHasChoice" },
 				},
 			},
 			// As soon as allPlayersLockedIn === true, we moved into the  locked state

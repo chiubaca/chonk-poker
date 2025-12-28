@@ -65,10 +65,6 @@ function RouteComponent() {
 		? { userId: session.user.id, userName: session.user.name }
 		: undefined;
 
-	console.log(
-		"🔍 ~ RouteComponent ~ src/routes/room/$roomId.tsx:72 ~ user:",
-		user,
-	);
 	return (
 		<GameRoomProvider roomId={roomId} user={user} gameState={gameState}>
 			<GameRoomContent />
@@ -78,11 +74,6 @@ function RouteComponent() {
 
 function GameRoomContent() {
 	const { roomId, gameState, user } = useContext(GameRoomContext);
-	console.log(
-		"🔍 ~ GameRoomContent ~ src/routes/room/$roomId.tsx:83 ~ gameState:",
-		gameState,
-	);
-
 	const handleAction = useServerFn(handleGameActionServerFn);
 
 	const handleLockIn = (_previousState: unknown, _formData: FormData) => {
@@ -254,7 +245,6 @@ function GameRoomContent() {
 											</div>
 											<span className="font-medium">{player.name}</span>
 										</div>
-										{player.choice}
 										{gameState.value !== "revealed" && (
 											<div
 												className={`badge ${
