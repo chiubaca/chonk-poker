@@ -130,7 +130,7 @@ function GameRoomContent() {
 	);
 
 	if (!gameState) {
-		return <>loading...</>;
+		return "loading...";
 	}
 
 	return (

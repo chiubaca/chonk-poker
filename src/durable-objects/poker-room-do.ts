@@ -103,10 +103,10 @@ export class PokerRoomObject extends DurableObject<Env> {
 	}
 
 	webSocketClose(
-		ws: WebSocket,
-		code: number,
-		reason: string,
-		wasClean: boolean,
+		_ws: WebSocket,
+		_code: number,
+		_reason: string,
+		_wasClean: boolean,
 	): void | Promise<void> {
 		console.log("client closed");
 	}

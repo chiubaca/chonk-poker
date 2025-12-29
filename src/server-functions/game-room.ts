@@ -13,7 +13,7 @@ export const handleGameActionServerFn = createServerFn()
 			roomId: z.string(),
 		}),
 	)
-	.handler(async ({ context, data }) => {
+	.handler(async ({ data }) => {
 		const { pokerEvent, roomId } = data;
 		const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
 		await stub.gameAction({ player: pokerEvent.player, type: pokerEvent.type });
