@@ -11,11 +11,18 @@ import { env } from "cloudflare:workers";
 import { SignIn } from "@/components/SignIn";
 import { UserRoomsList } from "@/components/UserRoomsList";
 import { newUsersToRoomsTable, roomTable } from "@/drizzle/schema";
-import { authClient, signIn, signOut } from "@/lib/auth-client";
+import { signIn, signOut } from "@/lib/auth-client";
 import { getDb } from "@/lib/database";
+import { getUserSessionFn } from "@/server-functions/get-session";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,
+	loader: async () => {
+		const sessions = await getUserSessionFn();
+		return {
+			sessions,
+		};
+	},
 });
 
 const FormFieldsEnum = {
@@ -131,6 +138,7 @@ export const handleFormServerFn = createServerFn({ method: "POST" })
 
 function RouteComponent() {
 	const handleForm = useServerFn(handleFormServerFn);
+	const { sessions } = Route.useLoaderData();
 
 	const [_formState, formAction, isPending] = useActionState(
 		(_prevState: FormState, formData: FormData) => {
@@ -139,14 +147,8 @@ function RouteComponent() {
 		},
 		null,
 	);
-	const {
-		data: session,
-		isPending: isAuthPending, //loading state
-		// error: authError, //error object
-		// refetch: refetchAuth, //refetch the session
-	} = authClient.useSession();
 
-	if (!session) {
+	if (!sessions) {
 		return <SignIn signIn={signIn} />;
 	}
 
@@ -158,7 +160,7 @@ function RouteComponent() {
 						<div className="flex justify-between items-center">
 							<div className="flex items-center gap-2">
 								<UserIcon className="w-4 h-4 opacity-70" />
-								<span>Hello, {session.user.name}</span>
+								<span>Hello, {sessions.user.name}</span>
 							</div>
 
 							<input
@@ -166,19 +168,19 @@ function RouteComponent() {
 								id={FormFieldsEnum.USER_NAME}
 								name={FormFieldsEnum.USER_NAME}
 								type="text"
-								value={session.user.name}
+								value={sessions.user.name}
 							/>
 							<input
 								hidden
 								id={FormFieldsEnum.USER_ID}
 								name={FormFieldsEnum.USER_ID}
 								type="text"
-								value={session.user.id}
+								value={sessions.user.id}
 							/>
 							<button
 								type="button"
 								className="btn btn-ghost btn-xs "
-								onClick={async () => await signOut()}
+								onClick={() => signOut()}
 							>
 								Logout
 							</button>
