@@ -33,16 +33,11 @@ export function ChoosingState() {
 			selectedChonk: "a-fine-boi" as Option,
 		},
 		onSubmit: async ({ value }) => {
-			console.log(
-				"🔍 ~ ChoosingState ~ src/components/room-game-state/ChoosingState.tsx:34 ~ value:",
-				value,
-			);
 			if (!user) {
 				console.log("spectator cant do this");
 				return;
 			}
 
-			// First handle the selection
 			await handleAction({
 				data: {
 					roomId,
