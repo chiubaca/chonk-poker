@@ -22,9 +22,5 @@ export const getUserRoomsServerFn = createServerFn()
 			.innerJoin(roomTable, eq(newUsersToRoomsTable.roomId, roomTable.id))
 			.where(eq(newUsersToRoomsTable.userId, userId));
 
-		console.log(
-			"🔍 ~ handler() callback ~ src/features/rooms/server-functions/user-rooms.ts:16 ~ userRooms:",
-			userRooms,
-		);
 		return userRooms;
 	});

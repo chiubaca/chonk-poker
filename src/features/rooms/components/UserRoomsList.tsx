@@ -54,26 +54,34 @@ export const UserRoomsList = () => {
 		<div className="card w-full max-w-md bg-base-300">
 			<div className="card-body">
 				<h3 className="card-title text-lg mb-4">Your Rooms</h3>
-				<div className="space-y-2 max-h-64 overflow-y-auto">
-					{userRooms.map((room: UserRoom) => (
-						<Link
-							key={room.roomId}
-							to="/room/$roomId"
-							params={{ roomId: room.roomId }}
-							className="flex items-center justify-between p-3 bg-base-200 rounded-lg hover:bg-base-100 transition-colors"
-						>
-							<div className="flex items-center gap-3">
-								<Hash className="w-4 h-4 opacity-70" />
-								<div>
-									<div className="font-mono font-bold">{room.roomId}</div>
-									<div className="text-xs opacity-70 capitalize">
-										{room.status}
+				<div
+					className="space-y-2 max-h-64 overflow-y-auto"
+					style={{
+						maskImage:
+							"linear-gradient(to bottom, black 0%, black 75%, transparent 100%)",
+					}}
+				>
+					{userRooms
+						.map((room: UserRoom) => (
+							<Link
+								key={room.roomId}
+								to="/room/$roomId"
+								params={{ roomId: room.roomId }}
+								className="flex items-center justify-between p-3 bg-base-200 rounded-lg hover:bg-base-100 transition-colors"
+							>
+								<div className="flex items-center gap-3">
+									<Hash className="w-4 h-4 opacity-70" />
+									<div>
+										<div className="font-mono font-bold">{room.roomId}</div>
+										<div className="text-xs opacity-70 capitalize">
+											{room.status}
+										</div>
 									</div>
 								</div>
-							</div>
-							<div className="btn btn-ghost btn-xs">Enter</div>
-						</Link>
-					))}
+								<div className="btn btn-ghost btn-xs">Enter</div>
+							</Link>
+						))
+						.reverse()}
 				</div>
 			</div>
 		</div>
