@@ -8,6 +8,7 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
+import { MarqueeBorder } from "@/components/MarqueeBorder";
 import { SignIn } from "@/components/SignIn";
 import { UserRoomsList } from "@/components/UserRoomsList";
 import { newUsersToRoomsTable, roomTable } from "@/drizzle/schema";
@@ -171,100 +172,103 @@ function RouteComponent() {
 	}
 
 	return (
-		<div className="flex flex-col items-center gap-4">
-			<div className="card card-border w-full max-w-md bg-base-300 mt-[30vh]">
-				<div className="card-body">
-					<div className="flex justify-between items-center mb-4">
-						<div className="flex items-center gap-2">
-							<UserIcon className="w-4 h-4 opacity-70" />
-							<span>Hello, {sessions.user.name}</span>
+		<>
+			<MarqueeBorder />
+			<div className="flex flex-col items-center gap-4">
+				<div className="card card-border w-full max-w-md bg-base-300 mt-[30vh]">
+					<div className="card-body">
+						<div className="flex justify-between items-center mb-4">
+							<div className="flex items-center gap-2">
+								<UserIcon className="w-4 h-4 opacity-70" />
+								<span>Hello, {sessions.user.name}</span>
+							</div>
+							<button
+								type="button"
+								className="btn btn-ghost btn-xs "
+								onClick={() => signOut()}
+							>
+								Logout
+							</button>
 						</div>
-						<button
-							type="button"
-							className="btn btn-ghost btn-xs "
-							onClick={() => signOut()}
+
+						{/* Create Room Form */}
+						<form
+							className="flex flex-col gap-4 mb-6"
+							onSubmit={handleCreateRoom}
 						>
-							Logout
-						</button>
+							<input
+								hidden
+								id={FormFieldsEnum.USER_NAME}
+								name={FormFieldsEnum.USER_NAME}
+								type="text"
+								value={sessions.user.name}
+							/>
+							<input
+								hidden
+								id={FormFieldsEnum.USER_ID}
+								name={FormFieldsEnum.USER_ID}
+								type="text"
+								value={sessions.user.id}
+							/>
+							<button
+								type="submit"
+								className="btn btn-primary"
+								disabled={createRoomMutation.isPending}
+							>
+								{createRoomMutation.isPending
+									? "Processing..."
+									: "Create new room"}
+							</button>
+						</form>
+
+						<div className="divider">OR</div>
+
+						{/* Join Room Form */}
+						<form className="flex flex-col gap-4" onSubmit={handleJoinRoom}>
+							<input
+								hidden
+								id={FormFieldsEnum.USER_NAME}
+								name={FormFieldsEnum.USER_NAME}
+								type="text"
+								value={sessions.user.name}
+							/>
+							<input
+								hidden
+								id={FormFieldsEnum.USER_ID}
+								name={FormFieldsEnum.USER_ID}
+								type="text"
+								value={sessions.user.id}
+							/>
+							<div className="flex flex-col gap-2">
+								<label className="input flex items-center gap-2 w-full">
+									<HashIcon className="w-4 h-4 opacity-70" />
+									<input
+										id={FormFieldsEnum.ROOM_ID}
+										name={FormFieldsEnum.ROOM_ID}
+										type="text"
+										placeholder="Enter room ID"
+										className="grow"
+										required
+									/>
+								</label>
+							</div>
+							<button
+								type="submit"
+								className="btn btn-secondary"
+								disabled={joinRoomMutation.isPending}
+							>
+								{joinRoomMutation.isPending
+									? "Processing..."
+									: "Join Existing Room"}
+							</button>
+						</form>
 					</div>
+				</div>
 
-					{/* Create Room Form */}
-					<form
-						className="flex flex-col gap-4 mb-6"
-						onSubmit={handleCreateRoom}
-					>
-						<input
-							hidden
-							id={FormFieldsEnum.USER_NAME}
-							name={FormFieldsEnum.USER_NAME}
-							type="text"
-							value={sessions.user.name}
-						/>
-						<input
-							hidden
-							id={FormFieldsEnum.USER_ID}
-							name={FormFieldsEnum.USER_ID}
-							type="text"
-							value={sessions.user.id}
-						/>
-						<button
-							type="submit"
-							className="btn btn-primary"
-							disabled={createRoomMutation.isPending}
-						>
-							{createRoomMutation.isPending
-								? "Processing..."
-								: "Create new room"}
-						</button>
-					</form>
-
-					<div className="divider">OR</div>
-
-					{/* Join Room Form */}
-					<form className="flex flex-col gap-4" onSubmit={handleJoinRoom}>
-						<input
-							hidden
-							id={FormFieldsEnum.USER_NAME}
-							name={FormFieldsEnum.USER_NAME}
-							type="text"
-							value={sessions.user.name}
-						/>
-						<input
-							hidden
-							id={FormFieldsEnum.USER_ID}
-							name={FormFieldsEnum.USER_ID}
-							type="text"
-							value={sessions.user.id}
-						/>
-						<div className="flex flex-col gap-2">
-							<label className="input flex items-center gap-2 w-full">
-								<HashIcon className="w-4 h-4 opacity-70" />
-								<input
-									id={FormFieldsEnum.ROOM_ID}
-									name={FormFieldsEnum.ROOM_ID}
-									type="text"
-									placeholder="Enter room ID"
-									className="grow"
-									required
-								/>
-							</label>
-						</div>
-						<button
-							type="submit"
-							className="btn btn-secondary"
-							disabled={joinRoomMutation.isPending}
-						>
-							{joinRoomMutation.isPending
-								? "Processing..."
-								: "Join Existing Room"}
-						</button>
-					</form>
+				<div className="min-w-md">
+					<UserRoomsList />
 				</div>
 			</div>
-
-			<div className="min-w-md">
-				<UserRoomsList />
-			</div>
-		</div>
+		</>
 	);
 }
