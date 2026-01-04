@@ -54,7 +54,7 @@ export const UserRoomsList = () => {
 		<div className="card w-full max-w-md bg-base-300">
 			<div className="card-body">
 				<h3 className="card-title text-lg mb-4">Your Rooms</h3>
-				<div className="space-y-2">
+				<div className="space-y-2 max-h-64 overflow-y-auto">
 					{userRooms.map((room: UserRoom) => (
 						<Link
 							key={room.roomId}
