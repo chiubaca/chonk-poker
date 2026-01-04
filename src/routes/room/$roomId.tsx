@@ -7,12 +7,12 @@ import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/features/auth/hooks/auth-client";
 import {
 	GameRoomContext,
 	GameRoomProvider,
-} from "@/realtime-sync/GameRoom.provider";
-import { handleGameActionServerFn } from "@/server-functions/game-room";
+} from "@/features/poker/realtime-sync/GameRoom.provider";
+import { handleGameActionServerFn } from "@/features/rooms/server-functions/game-room";
 
 import chonkOne from "../../assets/chonk-1.png";
 import chonkTwo from "../../assets/chonk-2.png";
@@ -21,7 +21,10 @@ import chonkFour from "../../assets/chonk-4.png";
 import chonkFive from "../../assets/chonk-5.png";
 import chonkSix from "../../assets/chonk-6.png";
 
-import type { Option } from "@/state-machine/planning-poker-machine.types";
+import type {
+	Option,
+	PokerPlayer,
+} from "@/features/poker/state-machine/planning-poker-machine.types";
 
 const chonkImages: { src: string; label: string; value: Option }[] = [
 	{ src: chonkOne, label: "A Fine Boi", value: "a-fine-boi" },
@@ -246,7 +249,7 @@ function GameRoomContent() {
 										Waiting for players...
 									</div>
 								)}
-								{gameState.context.players.map((player) => (
+								{gameState.context.players.map((player: PokerPlayer) => (
 									<div
 										key={player.id}
 										className="flex items-center justify-between p-2 bg-base-200 rounded-lg"

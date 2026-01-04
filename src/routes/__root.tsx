@@ -4,10 +4,10 @@ import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
-import { ThemeSwitcher } from "@/components/ThemeSwitcher";
-import { getQueryClient } from "@/lib/query-client";
+import { getQueryClient } from "@/infrastructure/query-client";
+import { ThemeSwitcher } from "@/shared/components";
 
-import appCss from "../styles.css?url";
+import appCss from "../shared/styles.css?url";
 
 export const Route = createRootRoute({
 	head: () => ({
