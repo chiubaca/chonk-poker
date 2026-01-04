@@ -11,14 +11,19 @@ export function MarqueeBorder() {
 		return () => clearInterval(interval);
 	}, []);
 
-	const text = "  C H O N K P O K E R  ".repeat(20);
+	const text = "• C H O N K • P O K E R ".repeat(20);
 
 	return (
-		<div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+		<div className="m-2 fixed inset-0 pointer-events-none z-50 overflow-hidden opacity-50">
 			{/* Top border */}
 			<div
-				className="absolute top-0 left-0 right-0 h-2 flex items-center justify-center overflow-hidden"
-				style={{ color: "hsl(var(--bc) / 0.15)" }}
+				className="absolute top-0 left-3 right-3 h-2 flex items-center justify-center overflow-hidden"
+				style={{
+					color: "hsl(var(--bc) / 0.15)",
+					WebkitMask:
+						"linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+					mask: "linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+				}}
 			>
 				<div
 					className="absolute text-xs font-mono whitespace-nowrap"
@@ -33,7 +38,12 @@ export function MarqueeBorder() {
 			{/* Right border */}
 			<div
 				className="absolute top-0 right-0 bottom-0 w-2 flex items-center justify-center overflow-hidden"
-				style={{ color: "hsl(var(--bc) / 0.15)" }}
+				style={{
+					color: "hsl(var(--bc) / 0.15)",
+					WebkitMask:
+						"linear-gradient(0deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+					mask: "linear-gradient(0deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+				}}
 			>
 				<div
 					className="absolute text-xs font-mono whitespace-nowrap"
@@ -48,8 +58,13 @@ export function MarqueeBorder() {
 
 			{/* Bottom border */}
 			<div
-				className="absolute bottom-0 left-0 right-0 h-2 flex items-center justify-center overflow-hidden"
-				style={{ color: "hsl(var(--bc) / 0.15)" }}
+				className="absolute bottom-0 left-3 right-3 h-2 flex items-center justify-center overflow-hidden"
+				style={{
+					color: "hsl(var(--bc) / 0.15)",
+					WebkitMask:
+						"linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+					mask: "linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+				}}
 			>
 				<div
 					className="absolute text-xs font-mono whitespace-nowrap"
@@ -64,7 +79,12 @@ export function MarqueeBorder() {
 			{/* Left border */}
 			<div
 				className="absolute top-0 left-0 bottom-0 w-2 flex items-center justify-center overflow-hidden"
-				style={{ color: "hsl(var(--bc) / 0.15)" }}
+				style={{
+					color: "hsl(var(--bc) / 0.15)",
+					WebkitMask:
+						"linear-gradient(0deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+					mask: "linear-gradient(0deg, transparent 0%, black 10%, black 90%, transparent 100%)",
+				}}
 			>
 				<div
 					className="absolute text-xs font-mono whitespace-nowrap"
