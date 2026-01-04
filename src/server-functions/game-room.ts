@@ -6,7 +6,7 @@ import { env } from "cloudflare:workers";
 
 import { pokerEventsSchema } from "@/state-machine/planning-poker-machine.schemas";
 
-export const handleGameActionServerFn = createServerFn()
+export const handleGameActionServerFn = createServerFn({ method: "POST" })
 	.inputValidator(
 		z.object({
 			pokerEvent: pokerEventsSchema,
@@ -14,7 +14,6 @@ export const handleGameActionServerFn = createServerFn()
 		}),
 	)
 	.handler(async ({ data }) => {
-		const { pokerEvent, roomId } = data;
-		const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
-		await stub.gameAction({ player: pokerEvent.player, type: pokerEvent.type });
+		const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(data.roomId);
+		await stub.gameAction(data.pokerEvent);
 	});

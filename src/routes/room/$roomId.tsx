@@ -1,6 +1,7 @@
-import { useActionState, useContext } from "react";
+import { useContext } from "react";
 import z from "zod";
 
+import { useForm } from "@tanstack/react-form";
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn, useServerFn } from "@tanstack/react-start";
 
@@ -76,58 +77,52 @@ function GameRoomContent() {
 	const { roomId, gameState, user } = useContext(GameRoomContext);
 	const handleAction = useServerFn(handleGameActionServerFn);
 
-	const handleLockIn = (_previousState: unknown, _formData: FormData) => {
-		if (!user) {
-			console.log("spectator cant do this");
-			return;
-		}
+	const form = useForm({
+		defaultValues: {
+			selectedChonk: "a-fine-boi" as Option,
+		},
+		onSubmit: async ({ value }) => {
+			console.log(
+				"🔍 ~ GameRoomContent ~ src/routes/room/$roomId.tsx:84 ~ value:",
+				value,
+			);
+			if (!user) {
+				console.log("spectator cant do this");
+				return;
+			}
 
-		handleAction({
-			data: {
-				roomId,
-				pokerEvent: {
-					type: "player.lock",
-					player: {
-						id: user.userId,
-						name: user.userName,
-						state: "locked-in",
+			// First handle the selection
+			await handleAction({
+				data: {
+					roomId,
+					pokerEvent: {
+						type: "player.choose",
+						player: {
+							id: user.userId,
+							name: user.userName,
+							state: "choosing",
+							choice: value.selectedChonk,
+						},
 					},
 				},
-			},
-		});
-		return { success: true };
-	};
+			});
 
-	const onChonkSelection = (
-		event: React.MouseEvent<HTMLInputElement, MouseEvent>,
-	) => {
-		if (!user) {
-			console.log("spectator cant do this");
-			return;
-		}
-
-		const optionValue = (event.target as HTMLInputElement).value;
-
-		handleAction({
-			data: {
-				roomId,
-				pokerEvent: {
-					type: "player.choose",
-					player: {
-						id: user.userId,
-						name: user.userName,
-						state: "choosing",
-						choice: optionValue as Option,
+			// Then lock in
+			await handleAction({
+				data: {
+					roomId,
+					pokerEvent: {
+						type: "player.lock",
+						player: {
+							id: user.userId,
+							name: user.userName,
+							state: "locked-in",
+						},
 					},
 				},
-			},
-		});
-	};
-
-	const [_formState, handleLockInAction, isPending] = useActionState(
-		handleLockIn,
-		null,
-	);
+			});
+		},
+	});
 
 	if (!gameState) {
 		return "loading...";
@@ -159,43 +154,64 @@ function GameRoomContent() {
 								<h2 className="card-title justify-center mb-6 text-2xl">
 									Choose your Chonk Level...
 								</h2>
-								<form action={handleLockInAction}>
-									<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-										{chonkImages.map(({ src, label, value }) => (
-											<label
-												key={value}
-												className="card bg-base-200 hover:bg-base-300 cursor-pointer transition-all border-2 border-transparent has-checked:border-primary"
-											>
-												<div className="card-body p-4 items-center text-center">
-													<input
-														type="radio"
-														name="selectedChonk"
-														value={value}
-														className="radio radio-primary hidden"
-														onClick={onChonkSelection}
-													/>
-													<img
-														src={src}
-														alt={label}
-														className="w-32 h-32 object-contain mb-2"
-													/>
-													<span className="font-medium">{label}</span>
-												</div>
-											</label>
-										))}
-									</div>
+
+								<form
+									onSubmit={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										form.handleSubmit();
+									}}
+								>
+									<form.Field name="selectedChonk">
+										{(field) => (
+											<div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+												{chonkImages.map(({ src, label, value }) => (
+													<label
+														key={value}
+														className="card bg-base-200 hover:bg-base-300 cursor-pointer transition-all border-2 border-transparent has-checked:border-primary"
+													>
+														<div className="card-body p-4 items-center text-center">
+															<input
+																type="radio"
+																name={field.name}
+																value={value}
+																checked={field.state.value === value}
+																onChange={() => field.handleChange(value)}
+																className="radio radio-primary hidden"
+															/>
+															<img
+																src={src}
+																alt={label}
+																className="w-32 h-32 object-contain mb-2"
+															/>
+															<span className="font-medium">{label}</span>
+														</div>
+													</label>
+												))}
+											</div>
+										)}
+									</form.Field>
 									<div className="card-actions justify-center mt-8">
-										<button
-											type="submit"
-											className="btn btn-primary btn-lg w-full md:w-1/2"
-											disabled={isPending}
+										<form.Subscribe
+											selector={(state) => [
+												state.canSubmit,
+												state.isSubmitting,
+											]}
 										>
-											{isPending ? (
-												<span className="loading loading-spinner"></span>
-											) : (
-												"Lock In Selection 🔒"
+											{([canSubmit, isSubmitting]) => (
+												<button
+													type="submit"
+													className="btn btn-primary btn-lg w-full md:w-1/2"
+													disabled={!canSubmit}
+												>
+													{isSubmitting ? (
+														<span className="loading loading-spinner"></span>
+													) : (
+														"Lock In Selection 🔒"
+													)}
+												</button>
 											)}
-										</button>
+										</form.Subscribe>
 									</div>
 								</form>
 							</div>
@@ -214,7 +230,7 @@ function GameRoomContent() {
 						</div>
 					)}
 
-					{gameState.value === "revealed" && <>implemnet me...</>}
+					{gameState.value === "revealed" && "implemnet me..."}
 				</div>
 
 				{/* Sidebar - Players List */}
