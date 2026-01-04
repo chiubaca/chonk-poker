@@ -24,6 +24,8 @@ export const planningPokerMachine = setup({
 			);
 		},
 		playerHasChoice: ({ context, event }) => {
+			if (event.type !== "player.lock") return false;
+
 			const player = context.players.find((p) => p.id === event.player.id);
 			return !!player?.choice;
 		},
@@ -74,6 +76,19 @@ export const planningPokerMachine = setup({
 					),
 					guard: { type: "playerHasChoice" },
 				},
+				"game.reset": {
+					target: "choosing",
+					actions: assign(({ context }) =>
+						produce(context, (draft) => {
+							draft.players = draft.players.map((player) => ({
+								...player,
+								choice: undefined,
+								state: "choosing" as const,
+							}));
+							draft.lockedInPlayers = 0;
+						}),
+					),
+				},
 			},
 			// As soon as allPlayersLockedIn === true, we moved into the  locked state
 			always: {
@@ -89,13 +104,41 @@ export const planningPokerMachine = setup({
 				"game.reveal": {
 					target: "revealed",
 				},
+				"game.reset": {
+					target: "choosing",
+					actions: assign(({ context }) =>
+						produce(context, (draft) => {
+							draft.players = draft.players.map((player) => ({
+								...player,
+								choice: undefined,
+								state: "choosing" as const,
+							}));
+							draft.lockedInPlayers = 0;
+						}),
+					),
+				},
 			},
 			description:
 				"All players have locked in their choices. More players cannot join.",
 		},
 		revealed: {
-			type: "final",
+			// type: "final",
 			description: "The selected cards from all players are revealed.",
+			on: {
+				"game.reset": {
+					target: "choosing",
+					actions: assign(({ context }) =>
+						produce(context, (draft) => {
+							draft.players = draft.players.map((player) => ({
+								...player,
+								choice: undefined,
+								state: "choosing" as const,
+							}));
+							draft.lockedInPlayers = 0;
+						}),
+					),
+				},
+			},
 		},
 	},
 });

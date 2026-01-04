@@ -2,7 +2,7 @@ import { useContext } from "react";
 import z from "zod";
 
 import { createFileRoute } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
+import { createServerFn, useServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
@@ -12,8 +12,9 @@ import {
 	GameRoomContext,
 	GameRoomProvider,
 } from "@/features/poker/realtime-sync/GameRoom.provider";
+import { handleGameActionServerFn } from "@/features/rooms/server-functions/game-room";
 
-import type { PokerPlayer } from "@/features/poker/state-machine/planning-poker-machine.types";
+import type { PokerPlayer } from "@/features/poker";
 
 const getGameStateServerFn = createServerFn()
 	.inputValidator(z.object({ roomId: z.string() }))
@@ -58,10 +59,32 @@ function RouteComponent() {
 
 function GameRoomContent() {
 	const { roomId, gameState, user } = useContext(GameRoomContext);
+	const handleAction = useServerFn(handleGameActionServerFn);
 
 	if (!gameState) {
 		return "loading...";
 	}
+
+	const isFirstPlayer =
+		user &&
+		gameState.context.players.length > 0 &&
+		gameState.context.players[0].id === user.userId;
+
+	const handleResetGame = async () => {
+		if (!user) {
+			console.log("spectator cant do this");
+			return;
+		}
+
+		await handleAction({
+			data: {
+				roomId,
+				pokerEvent: {
+					type: "game.reset",
+				},
+			},
+		});
+	};
 
 	return (
 		<div className="min-h-screen bg-base-300 p-4 md:p-8">
@@ -73,6 +96,15 @@ function GameRoomContent() {
 					</a>
 				</div>
 				<div className="flex-none gap-4">
+					{isFirstPlayer && (
+						<button
+							type="button"
+							className="btn btn-warning btn-sm"
+							onClick={handleResetGame}
+						>
+							Reset Game
+						</button>
+					)}
 					<div className="badge badge-neutral">Room: {roomId}</div>
 					<div className="badge badge-primary">
 						👤 {user?.userName || "Spectating"}
