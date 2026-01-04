@@ -8,13 +8,16 @@ import { createServerFn } from "@tanstack/react-start";
 
 import { env } from "cloudflare:workers";
 
-import { MarqueeBorder } from "@/components/MarqueeBorder";
-import { SignIn } from "@/components/SignIn";
-import { UserRoomsList } from "@/components/UserRoomsList";
-import { newUsersToRoomsTable, roomTable } from "@/drizzle/schema";
-import { signIn, signOut } from "@/lib/auth-client";
-import { getDb } from "@/lib/database";
-import { getUserSessionFn } from "@/server-functions/get-session";
+import { SignIn } from "@/features/auth/components";
+import { signIn, signOut } from "@/features/auth/hooks/auth-client";
+import { getUserSessionFn } from "@/features/auth/server-functions/get-session";
+import { UserRoomsList } from "@/features/rooms/components";
+import { getDb } from "@/infrastructure/database/database";
+import {
+	newUsersToRoomsTable,
+	roomTable,
+} from "@/infrastructure/database/drizzle/schema";
+import { MarqueeBorder } from "@/shared/components";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,

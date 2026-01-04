@@ -1,7 +1,7 @@
-import { initDatabase } from '@/lib/database';
+import { initDatabase } from '@/infrastructure/database/database';
 import handler, { createServerEntry } from '@tanstack/react-start/server-entry'
 import { env } from 'cloudflare:workers';
-export { PokerRoomObject } from './src/durable-objects/poker-room-do'
+export { PokerRoomObject } from './src/infrastructure/durable-objects/poker-room-do'
 
 export default createServerEntry({
   

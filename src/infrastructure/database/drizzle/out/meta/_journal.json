@@ -1,0 +1,27 @@
+{
+	"version": "7",
+	"dialect": "sqlite",
+	"entries": [
+		{
+			"idx": 0,
+			"version": "6",
+			"when": 1766437619506,
+			"tag": "0000_dapper_mentallo",
+			"breakpoints": true
+		},
+		{
+			"idx": 1,
+			"version": "6",
+			"when": 1766439995455,
+			"tag": "0001_bizarre_captain_flint",
+			"breakpoints": true
+		},
+		{
+			"idx": 2,
+			"version": "6",
+			"when": 1766440994498,
+			"tag": "0002_ambiguous_garia",
+			"breakpoints": true
+		}
+	]
+}
