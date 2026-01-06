@@ -100,7 +100,7 @@ export function ChoosingState() {
 			{/* Header */}
 			<div className="bg-gradient-to-r from-primary/20 to-secondary/20 px-4 sm:px-6 py-4 text-center">
 				<h2 className="text-xl sm:text-2xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-					Pick Your Chonk!
+					Choose Your Chonk
 				</h2>
 				<p className="text-sm opacity-60 mt-1">How chunky is this task?</p>
 			</div>
