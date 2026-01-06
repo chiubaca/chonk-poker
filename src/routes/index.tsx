@@ -87,7 +87,7 @@ export const handleJoinRoomServerFn = createServerFn({ method: "POST" })
 		return {
 			userName: formData.get(FormFieldsEnum.USER_NAME)?.toString() || "",
 			userId: formData.get(FormFieldsEnum.USER_ID)?.toString() || "",
-			roomId,
+			roomId: roomId.toUpperCase(),
 		};
 	})
 	.handler(async ({ data }) => {
