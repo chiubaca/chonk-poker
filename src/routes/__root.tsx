@@ -3,9 +3,10 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import { useEffect } from "react";
 
 import { getQueryClient } from "@/infrastructure/query-client";
-import { getThemeServerFn } from "@/shared/utils/theme";
+import { getThemeFromCookies, getThemeServerFn } from "@/shared/utils/theme";
 
 import appCss from "../shared/styles.css?url";
 
@@ -40,6 +41,14 @@ export const Route = createRootRoute({
 function RootDocument({ children }: { children: React.ReactNode }) {
 	const queryClient = getQueryClient();
 	const theme = Route.useRouteContext()?.theme || "dracula";
+
+	useEffect(() => {
+		// Ensure client-side theme matches server-side theme
+		const clientTheme = getThemeFromCookies();
+		if (clientTheme !== theme) {
+			document.documentElement.setAttribute("data-theme", theme);
+		}
+	}, [theme]);
 
 	return (
 		<html lang="en" data-theme={theme}>
