@@ -180,15 +180,9 @@ function RouteComponent() {
 				<div className="max-w-md mx-auto pt-8 sm:pt-16 pb-8 flex flex-col gap-6">
 					{/* Header with mascot */}
 					<div className="text-center mb-2">
-						<div className="text-5xl mb-3 animate-bounce inline-block">
-							{"(=^.^=)"}
-						</div>
 						<h1 className="text-3xl sm:text-4xl font-black tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
 							Chonk Poker
 						</h1>
-						<p className="text-sm opacity-60 mt-1">
-							Planning poker for adorable teams
-						</p>
 					</div>
 
 					{/* Main card */}
@@ -313,11 +307,6 @@ function RouteComponent() {
 
 					{/* User rooms list */}
 					<UserRoomsList />
-
-					{/* Footer */}
-					<p className="text-center text-xs opacity-40 mt-4">
-						Made with love for agile teams everywhere
-					</p>
 				</div>
 			</div>
 		</>

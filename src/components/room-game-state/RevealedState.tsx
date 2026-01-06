@@ -50,9 +50,6 @@ export function RevealedState() {
 		<div className="card bg-base-200 border-4 border-base-300 rounded-3xl overflow-hidden">
 			{/* Header */}
 			<div className="bg-gradient-to-r from-primary/20 to-secondary/20 px-4 sm:px-6 py-6 text-center">
-				<div className="text-5xl sm:text-6xl mb-3">
-					{hasConsensus ? "(^.^)" : "(o.O)"}
-				</div>
 				<h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
 					{hasConsensus ? "Perfect Consensus!" : "Results Are In!"}
 				</h2>
@@ -181,6 +178,9 @@ export function RevealedState() {
 
 				{/* Summary */}
 				<div className="mt-6 p-4 bg-base-100 rounded-2xl border-2 border-base-300 text-center">
+					<div className="text-5xl sm:text-6xl mb-3">
+						{hasConsensus ? "🙌🏼" : "🤔"}
+					</div>
 					<p className="text-sm opacity-60">
 						{hasConsensus
 							? "Great teamwork! Everyone estimated the same level of chonkiness."

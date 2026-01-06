@@ -225,10 +225,7 @@ export function ChoosingState() {
 											Locking in...
 										</>
 									) : (
-										<>
-											Lock In My Choice
-											<span className="text-xl">{"(=^.^=)"}</span>
-										</>
+										<>Lock In My Choice 🔒</>
 									)}
 								</button>
 							)}

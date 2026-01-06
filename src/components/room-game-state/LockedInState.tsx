@@ -20,10 +20,6 @@ export function LockedInState() {
 				roomId,
 				pokerEvent: {
 					type: "game.reveal",
-					player: {
-						id: user.userId,
-						state: "locked-in",
-					},
 				},
 			},
 		});
@@ -32,21 +28,6 @@ export function LockedInState() {
 	return (
 		<div className="card bg-base-200 border-4 border-base-300 rounded-3xl overflow-hidden">
 			<div className="card-body items-center text-center py-12 sm:py-16 px-6">
-				{/* Animated cat waiting */}
-				<div className="relative mb-6">
-					<div className="text-6xl sm:text-7xl animate-bounce">{"(=^.^=)"}</div>
-					{/* Floating cards around the cat */}
-					<div className="absolute -top-2 -left-4 w-8 h-12 bg-primary/20 rounded-lg rotate-[-15deg] animate-float border-2 border-primary/30" />
-					<div
-						className="absolute -top-4 -right-4 w-8 h-12 bg-secondary/20 rounded-lg rotate-[10deg] animate-float border-2 border-secondary/30"
-						style={{ animationDelay: "0.5s" }}
-					/>
-					<div
-						className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-8 h-12 bg-accent/20 rounded-lg rotate-[5deg] animate-float border-2 border-accent/30"
-						style={{ animationDelay: "1s" }}
-					/>
-				</div>
-
 				<h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
 					Everyone's Ready!
 				</h2>
@@ -60,8 +41,7 @@ export function LockedInState() {
 						className="btn btn-primary btn-lg rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.05] active:scale-[0.95] transition-all duration-200 font-bold text-base gap-2 px-8"
 						onClick={handleRevealCards}
 					>
-						<span className="text-xl">{"(o.o)"}</span>
-						Reveal All Cards!
+						Reveal Cards! 👀
 					</button>
 				) : (
 					<div className="text-center p-4 bg-warning/10 rounded-2xl border-2 border-warning/30">

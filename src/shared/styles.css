@@ -1,7 +1,12 @@
 @import "tailwindcss";
+@import "daisyui";
 
-@plugin "daisyui" {
-	themes: all;
+/* Set Space Mono as the main font */
+@layer base {
+	html {
+		font-family:
+			"Space Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+	}
 }
 
 /* Custom playful animations */

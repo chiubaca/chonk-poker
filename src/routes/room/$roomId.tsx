@@ -8,12 +8,12 @@ import { env } from "cloudflare:workers";
 
 import { RoomGameState } from "@/components/room-game-state/RoomGameState";
 import { authClient } from "@/features/auth/hooks/auth-client";
-import { ThemeSwitcher } from "@/shared/components";
 import {
 	GameRoomContext,
 	GameRoomProvider,
 } from "@/features/poker/realtime-sync/GameRoom.provider";
 import { handleGameActionServerFn } from "@/features/rooms/server-functions/game-room";
+import { ThemeSwitcher } from "@/shared/components";
 
 import type { PokerPlayer } from "@/features/poker";
 
@@ -111,7 +111,6 @@ function GameRoomContent() {
 							href="/"
 							className="flex items-center gap-2 hover:opacity-80 transition-opacity"
 						>
-							<span className="text-2xl">{"(=^.^=)"}</span>
 							<span className="font-black text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hidden sm:inline">
 								Chonk Poker
 							</span>
