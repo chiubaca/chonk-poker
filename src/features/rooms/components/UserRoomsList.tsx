@@ -42,7 +42,7 @@ export const UserRoomsList = () => {
 			<div className="card bg-base-200 border-4 border-base-300 rounded-3xl overflow-hidden">
 				<div className="card-body p-4 sm:p-6">
 					<div className="text-center py-6">
-						<div className="text-4xl mb-3 opacity-50">{"( o.o )"}</div>
+						<div className="text-4xl mb-3 opacity-50">🙀</div>
 						<p className="text-sm opacity-60">No rooms yet!</p>
 						<p className="text-xs opacity-40 mt-1">
 							Create or join a room to get started
