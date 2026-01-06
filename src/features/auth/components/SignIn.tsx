@@ -1,9 +1,14 @@
+// import { ThemeSwitcher } from "@/shared/components";
+
 export const SignIn = ({ signIn }: { signIn: () => void }) => {
 	return (
 		<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 p-4">
 			<div className="card w-full max-w-sm bg-base-200 shadow-2xl border-4 border-base-300 rounded-3xl overflow-hidden">
 				{/* Cute decorative header */}
 				<div className="bg-gradient-to-r from-primary/20 to-secondary/20 py-6 px-4">
+					{/* <div className="flex justify-end mb-2">
+						<ThemeSwitcher />
+					</div> */}
 					<div className="flex justify-center mb-4">
 						{/* Cute cat mascot */}
 						<div className="text-6xl animate-bounce">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
 	getThemeFromCookies,
@@ -8,10 +8,6 @@ import {
 
 export const ThemeSwitcher = () => {
 	const [currentTheme, setCurrentTheme] = useState(() => getThemeFromCookies());
-
-	useEffect(() => {
-		document.documentElement.setAttribute("data-theme", currentTheme);
-	}, [currentTheme]);
 
 	const handleThemeChange = (theme: string) => {
 		setCurrentTheme(theme);

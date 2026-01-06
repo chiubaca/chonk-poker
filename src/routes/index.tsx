@@ -16,7 +16,7 @@ import {
 	newUsersToRoomsTable,
 	roomTable,
 } from "@/infrastructure/database/drizzle/schema";
-import { MarqueeBorder, ThemeSwitcher } from "@/shared/components";
+import { MarqueeBorder } from "@/shared/components";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,
@@ -202,7 +202,7 @@ function RouteComponent() {
 									</div>
 								</div>
 								<div className="flex items-center gap-2">
-									<ThemeSwitcher />
+									{/* <ThemeSwitcher /> */}
 									<button
 										type="button"
 										className="btn btn-ghost btn-sm rounded-xl opacity-70 hover:opacity-100"

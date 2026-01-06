@@ -13,7 +13,8 @@ import {
 	GameRoomProvider,
 } from "@/features/poker/realtime-sync/GameRoom.provider";
 import { handleGameActionServerFn } from "@/features/rooms/server-functions/game-room";
-import { ThemeSwitcher } from "@/shared/components";
+
+// import { ThemeSwitcher } from "@/shared/components";
 
 import type { PokerPlayer } from "@/features/poker";
 
@@ -144,7 +145,7 @@ function GameRoomContent() {
 
 						{/* User badge */}
 						<div className="flex items-center gap-2">
-							<ThemeSwitcher />
+							{/* <ThemeSwitcher /> */}
 							{user ? (
 								<div className="flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1.5 border-2 border-primary/30">
 									<div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs font-bold">
