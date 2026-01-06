@@ -1,13 +1,44 @@
 export const SignIn = ({ signIn }: { signIn: () => void }) => {
 	return (
-		<div className="flex items-center justify-center min-h-screen bg-base-100">
-			<div className="card w-full max-w-md bg-base-200 shadow-xl">
-				<div className="card-body items-center text-center">
-					<h2 className="card-title text-2xl font-bold mb-2">
-						Welcome to Chonk Poker
-					</h2>
-					<p className="text-base-content/70 mb-6">
-						Sign in to start planning with your team
+		<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 p-4">
+			<div className="card w-full max-w-sm bg-base-200 shadow-2xl border-4 border-base-300 rounded-3xl overflow-hidden">
+				{/* Cute decorative header */}
+				<div className="bg-gradient-to-r from-primary/20 to-secondary/20 py-6 px-4">
+					<div className="flex justify-center mb-4">
+						{/* Cute cat mascot */}
+						<div className="text-6xl animate-bounce">
+							<span role="img" aria-label="cat">
+								{"(=^.^=)"}
+							</span>
+						</div>
+					</div>
+					<h1 className="text-center text-3xl font-black tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+						Chonk Poker
+					</h1>
+					<p className="text-center text-sm mt-1 opacity-70 font-medium">
+						Planning poker for adorable teams
+					</p>
+				</div>
+
+				<div className="card-body items-center text-center pt-6 pb-8">
+					{/* Floating cards decoration */}
+					<div className="flex gap-2 mb-4">
+						<div className="w-8 h-12 bg-primary/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[-8deg] shadow-md border-2 border-primary/30">
+							1
+						</div>
+						<div className="w-8 h-12 bg-secondary/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[4deg] shadow-md border-2 border-secondary/30">
+							3
+						</div>
+						<div className="w-8 h-12 bg-accent/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[-2deg] shadow-md border-2 border-accent/30">
+							5
+						</div>
+						<div className="w-8 h-12 bg-info/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[6deg] shadow-md border-2 border-info/30">
+							8
+						</div>
+					</div>
+
+					<p className="text-base-content/60 mb-6 text-sm px-4">
+						Join your team for collaborative estimation sessions!
 					</p>
 
 					<button
@@ -15,8 +46,7 @@ export const SignIn = ({ signIn }: { signIn: () => void }) => {
 							await signIn();
 						}}
 						type="button"
-						className="btn btn-wide btn-outline hover:btn-primary transition-all duration-200 gap-3"
-						// disabled={isAuthPending}
+						className="btn btn-primary btn-lg w-full max-w-xs rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 gap-3 font-bold"
 					>
 						<svg className="w-5 h-5" viewBox="0 0 24 24">
 							<title>Google logo</title>
@@ -39,6 +69,10 @@ export const SignIn = ({ signIn }: { signIn: () => void }) => {
 						</svg>
 						Sign in with Google
 					</button>
+
+					<p className="text-xs opacity-50 mt-4">
+						Free forever. No credit card required.
+					</p>
 				</div>
 			</div>
 		</div>

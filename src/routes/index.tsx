@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { Hash as HashIcon, User as UserIcon } from "lucide-react";
+
 import { nanoid } from "nanoid";
 
 import { useMutation } from "@tanstack/react-query";
@@ -177,35 +177,57 @@ function RouteComponent() {
 	return (
 		<>
 			<MarqueeBorder />
-			<div className="flex items-center justify-center h-screen overflow-hidden">
-				<div className="flex flex-col items-center gap-6">
-					<div className="card card-border w-full max-w-md bg-base-300">
-						<div className="card-body">
-							<div className="flex justify-between items-center mb-4">
-								<div className="flex items-center gap-2">
-									<UserIcon className="w-4 h-4 opacity-70" />
-									<span>Hello, {sessions.user.name}</span>
+			<div className="min-h-screen bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 p-4 sm:p-6 overflow-auto">
+				<div className="max-w-md mx-auto pt-8 sm:pt-16 pb-8 flex flex-col gap-6">
+					{/* Header with mascot */}
+					<div className="text-center mb-2">
+						<div className="text-5xl mb-3 animate-bounce inline-block">
+							{"(=^.^=)"}
+						</div>
+						<h1 className="text-3xl sm:text-4xl font-black tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+							Chonk Poker
+						</h1>
+						<p className="text-sm opacity-60 mt-1">
+							Planning poker for adorable teams
+						</p>
+					</div>
+
+					{/* Main card */}
+					<div className="card bg-base-200 shadow-xl border-4 border-base-300 rounded-3xl overflow-hidden">
+						{/* User greeting banner */}
+						<div className="bg-gradient-to-r from-primary/20 to-secondary/20 px-4 sm:px-6 py-4">
+							<div className="flex justify-between items-center">
+								<div className="flex items-center gap-3">
+									<div className="w-10 h-10 rounded-full bg-primary/30 flex items-center justify-center text-lg font-bold border-2 border-primary/50">
+										{sessions.user.name.charAt(0).toUpperCase()}
+									</div>
+									<div>
+										<p className="text-xs opacity-60">Welcome back!</p>
+										<p className="font-bold text-sm sm:text-base">
+											{sessions.user.name}
+										</p>
+									</div>
 								</div>
 								<button
 									type="button"
-									className="btn btn-ghost btn-xs "
+									className="btn btn-ghost btn-sm rounded-xl opacity-70 hover:opacity-100"
 									onClick={() => signOut()}
 								>
 									Logout
 								</button>
 							</div>
+						</div>
 
+						<div className="card-body p-4 sm:p-6">
 							{/* Create Room Form */}
-							<form
-								className="flex flex-col gap-4 mb-6"
-								onSubmit={handleCreateRoom}
-							>
+							<form onSubmit={handleCreateRoom}>
 								<input
 									hidden
 									id={FormFieldsEnum.USER_NAME}
 									name={FormFieldsEnum.USER_NAME}
 									type="text"
 									value={sessions.user.name}
+									readOnly
 								/>
 								<input
 									hidden
@@ -213,65 +235,87 @@ function RouteComponent() {
 									name={FormFieldsEnum.USER_ID}
 									type="text"
 									value={sessions.user.id}
+									readOnly
 								/>
 								<button
 									type="submit"
-									className="btn btn-primary"
+									className="btn btn-primary btn-lg w-full rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-bold text-base"
 									disabled={createRoomMutation.isPending}
 								>
-									{createRoomMutation.isPending
-										? "Processing..."
-										: "Create new room"}
+									{createRoomMutation.isPending ? (
+										<>
+											<span className="loading loading-spinner loading-sm" />
+											Creating room...
+										</>
+									) : (
+										<>
+											<span className="text-xl">+</span>
+											Create New Room
+										</>
+									)}
 								</button>
 							</form>
 
-							<div className="divider">OR</div>
+							<div className="divider text-xs opacity-50 my-4">
+								or join an existing room
+							</div>
 
 							{/* Join Room Form */}
-							<form className="flex flex-col gap-4" onSubmit={handleJoinRoom}>
+							<form className="flex flex-col gap-3" onSubmit={handleJoinRoom}>
 								<input
 									hidden
-									id={FormFieldsEnum.USER_NAME}
+									id={`join-${FormFieldsEnum.USER_NAME}`}
 									name={FormFieldsEnum.USER_NAME}
 									type="text"
 									value={sessions.user.name}
+									readOnly
 								/>
 								<input
 									hidden
-									id={FormFieldsEnum.USER_ID}
+									id={`join-${FormFieldsEnum.USER_ID}`}
 									name={FormFieldsEnum.USER_ID}
 									type="text"
 									value={sessions.user.id}
+									readOnly
 								/>
-								<div className="flex flex-col gap-2">
-									<label className="input flex items-center gap-2 w-full">
-										<HashIcon className="w-4 h-4 opacity-70" />
-										<input
-											id={FormFieldsEnum.ROOM_ID}
-											name={FormFieldsEnum.ROOM_ID}
-											type="text"
-											placeholder="Enter room ID"
-											className="grow"
-											required
-										/>
-									</label>
+								<div className="relative">
+									<div className="absolute left-4 top-1/2 -translate-y-1/2 text-lg opacity-50">
+										#
+									</div>
+									<input
+										id={FormFieldsEnum.ROOM_ID}
+										name={FormFieldsEnum.ROOM_ID}
+										type="text"
+										placeholder="Enter room code"
+										className="input input-lg w-full pl-10 rounded-2xl border-2 border-base-300 focus:border-secondary bg-base-100 font-mono uppercase tracking-wider text-center"
+										required
+									/>
 								</div>
 								<button
 									type="submit"
-									className="btn btn-secondary"
+									className="btn btn-secondary btn-lg w-full rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-bold text-base"
 									disabled={joinRoomMutation.isPending}
 								>
-									{joinRoomMutation.isPending
-										? "Processing..."
-										: "Join Existing Room"}
+									{joinRoomMutation.isPending ? (
+										<>
+											<span className="loading loading-spinner loading-sm" />
+											Joining...
+										</>
+									) : (
+										"Join Room"
+									)}
 								</button>
 							</form>
 						</div>
 					</div>
 
-					<div className="min-w-md">
-						<UserRoomsList />
-					</div>
+					{/* User rooms list */}
+					<UserRoomsList />
+
+					{/* Footer */}
+					<p className="text-center text-xs opacity-40 mt-4">
+						Made with love for agile teams everywhere
+					</p>
 				</div>
 			</div>
 		</>

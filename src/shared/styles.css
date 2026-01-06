@@ -3,3 +3,111 @@
 @plugin "daisyui" {
 	themes: all;
 }
+
+/* Custom playful animations */
+@keyframes wiggle {
+	0%,
+	100% {
+		transform: rotate(-3deg);
+	}
+	50% {
+		transform: rotate(3deg);
+	}
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-10px);
+	}
+}
+
+@keyframes pulse-soft {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.7;
+	}
+}
+
+@keyframes pop-in {
+	0% {
+		transform: scale(0.8);
+		opacity: 0;
+	}
+	50% {
+		transform: scale(1.05);
+	}
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+.animate-wiggle {
+	animation: wiggle 0.5s ease-in-out infinite;
+}
+
+.animate-float {
+	animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+	animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.animate-pop-in {
+	animation: pop-in 0.3s ease-out forwards;
+}
+
+/* Smooth transitions for interactive elements */
+.btn {
+	transition: all 0.2s ease-out;
+}
+
+/* Card hover effects */
+.card {
+	transition:
+		transform 0.2s ease-out,
+		box-shadow 0.2s ease-out;
+}
+
+/* Custom scrollbar for rooms list */
+.overflow-y-auto::-webkit-scrollbar {
+	width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+	background: oklch(var(--bc) / 0.2);
+	border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+	background: oklch(var(--bc) / 0.3);
+}
+
+/* Input focus effects */
+input:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px oklch(var(--p) / 0.2);
+}
+
+/* Mobile-friendly touch targets */
+@media (max-width: 640px) {
+	.btn {
+		min-height: 48px;
+	}
+
+	.input {
+		min-height: 48px;
+	}
+}
