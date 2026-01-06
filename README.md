@@ -1,4 +1,4 @@
-# Chonk Poker
+# Chonk Poker 😼
 
 Realtime multiplayer planning poker built with TanStack, Drizzle ORM, and Cloudflare D1 and Durable Objects
 
