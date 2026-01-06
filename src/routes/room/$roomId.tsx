@@ -8,6 +8,7 @@ import { env } from "cloudflare:workers";
 
 import { RoomGameState } from "@/components/room-game-state/RoomGameState";
 import { authClient } from "@/features/auth/hooks/auth-client";
+import { ThemeSwitcher } from "@/shared/components";
 import {
 	GameRoomContext,
 	GameRoomProvider,
@@ -126,6 +127,7 @@ function GameRoomContent() {
 
 						{/* User badge */}
 						<div className="flex items-center gap-2">
+							<ThemeSwitcher />
 							{user ? (
 								<div className="flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1.5 border-2 border-primary/30">
 									<div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs font-bold">

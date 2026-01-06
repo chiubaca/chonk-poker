@@ -1,4 +1,5 @@
 import { useContext } from "react";
+
 import { useServerFn } from "@tanstack/react-start";
 
 import { GameRoomContext } from "@/features/poker/realtime-sync/GameRoom.provider";
@@ -21,7 +22,6 @@ export function LockedInState() {
 					type: "game.reveal",
 					player: {
 						id: user.userId,
-						name: user.userName,
 						state: "locked-in",
 					},
 				},

@@ -5,7 +5,6 @@ import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { getQueryClient } from "@/infrastructure/query-client";
-import { ThemeSwitcher } from "@/shared/components";
 
 import appCss from "../shared/styles.css?url";
 
@@ -44,9 +43,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body>
 				<QueryClientProvider client={queryClient}>
-					<div className="absolute top-4 right-4">
-						<ThemeSwitcher />
-					</div>
 					{children}
 					<TanStackDevtools
 						config={{

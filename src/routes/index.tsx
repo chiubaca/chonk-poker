@@ -1,5 +1,4 @@
 import { and, eq } from "drizzle-orm";
-
 import { nanoid } from "nanoid";
 
 import { useMutation } from "@tanstack/react-query";
@@ -17,7 +16,7 @@ import {
 	newUsersToRoomsTable,
 	roomTable,
 } from "@/infrastructure/database/drizzle/schema";
-import { MarqueeBorder } from "@/shared/components";
+import { MarqueeBorder, ThemeSwitcher } from "@/shared/components";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,
@@ -208,13 +207,16 @@ function RouteComponent() {
 										</p>
 									</div>
 								</div>
-								<button
-									type="button"
-									className="btn btn-ghost btn-sm rounded-xl opacity-70 hover:opacity-100"
-									onClick={() => signOut()}
-								>
-									Logout
-								</button>
+								<div className="flex items-center gap-2">
+									<ThemeSwitcher />
+									<button
+										type="button"
+										className="btn btn-ghost btn-sm rounded-xl opacity-70 hover:opacity-100"
+										onClick={() => signOut()}
+									>
+										Logout
+									</button>
+								</div>
 							</div>
 						</div>
 
