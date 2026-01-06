@@ -31,13 +31,18 @@ const getGameStateServerFn = createServerFn()
 export const Route = createFileRoute("/room/$roomId")({
 	component: RouteComponent,
 	loader: async ({ params }) => {
-		const gameState = await getGameStateServerFn({
-			data: { roomId: params.roomId },
-		});
+		try {
+			const gameState = await getGameStateServerFn({
+				data: { roomId: params.roomId },
+			});
 
-		return {
-			gameState: gameState ? JSON.parse(gameState) : null,
-		};
+			return {
+				gameState: gameState ? JSON.parse(gameState) : null,
+			};
+		} catch (error) {
+			console.error("error fetching game state for room:", error);
+			return { gameState: null };
+		}
 	},
 });
 
@@ -50,6 +55,19 @@ function RouteComponent() {
 	const user = session
 		? { userId: session.user.id, userName: session.user.name }
 		: undefined;
+
+	if (!gameState) {
+		return (
+			<div className="min-h-screen bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 flex items-center justify-center">
+				<div className="text-center">
+					<p className="mt-4 opacity-60">sorry, something borked 😅</p>
+					<a href="/" className="btn btn-ghost btn-sm mt-4">
+						back to home
+					</a>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<GameRoomProvider roomId={roomId} user={user} gameState={gameState}>
