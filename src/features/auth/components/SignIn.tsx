@@ -11,11 +11,6 @@ export const SignIn = ({ signIn }: { signIn: () => void }) => {
 					</div> */}
 					<div className="flex justify-center mb-4">
 						{/* Cute cat mascot */}
-						<div className="text-6xl animate-bounce">
-							<span role="img" aria-label="cat">
-								{"(=^.^=)"}
-							</span>
-						</div>
 					</div>
 					<h1 className="text-center text-3xl font-black tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
 						Chonk Poker
@@ -29,16 +24,16 @@ export const SignIn = ({ signIn }: { signIn: () => void }) => {
 					{/* Floating cards decoration */}
 					<div className="flex gap-2 mb-4">
 						<div className="w-8 h-12 bg-primary/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[-8deg] shadow-md border-2 border-primary/30">
-							1
+							😸
 						</div>
 						<div className="w-8 h-12 bg-secondary/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[4deg] shadow-md border-2 border-secondary/30">
-							3
+							😼
 						</div>
 						<div className="w-8 h-12 bg-accent/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[-2deg] shadow-md border-2 border-accent/30">
-							5
+							😺
 						</div>
 						<div className="w-8 h-12 bg-info/20 rounded-lg flex items-center justify-center text-lg font-bold rotate-[6deg] shadow-md border-2 border-info/30">
-							8
+							🙀
 						</div>
 					</div>
 
@@ -74,10 +69,6 @@ export const SignIn = ({ signIn }: { signIn: () => void }) => {
 						</svg>
 						Sign in with Google
 					</button>
-
-					<p className="text-xs opacity-50 mt-4">
-						Free forever. No credit card required.
-					</p>
 				</div>
 			</div>
 		</div>
