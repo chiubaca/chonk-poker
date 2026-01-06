@@ -5,6 +5,8 @@ import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { getQueryClient } from "@/infrastructure/query-client";
+import "@fontsource/coming-soon";
+import "@fontsource/comic-mono";
 
 // import { getThemeFromCookies, getThemeServerFn } from "@/shared/utils/theme";
 

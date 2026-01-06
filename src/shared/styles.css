@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 @plugin "daisyui" {
 	themes: all;
 }
@@ -6,8 +7,13 @@
 @layer base {
 	html {
 		font-family:
-			"Space Mono", "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+			"Coming Soon", "Comic Sans MS", "Comic Neue", "Chalkboard", "Marker Felt",
+			cursive;
 	}
+}
+
+@theme {
+	--font-mono: "Comic Mono", monospace;
 }
 
 /* Custom playful animations */

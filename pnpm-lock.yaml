@@ -11,6 +11,12 @@ importers:
       '@cloudflare/vite-plugin':
         specifier: ^1.13.8
         version: 1.18.0(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))(workerd@1.20251213.0)(wrangler@4.55.0)
+      '@fontsource/comic-mono':
+        specifier: ^5.2.5
+        version: 5.2.5
+      '@fontsource/coming-soon':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@tailwindcss/vite':
         specifier: ^4.0.6
         version: 4.1.18(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
@@ -1065,6 +1071,12 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@fontsource/comic-mono@5.2.5':
+    resolution: {integrity: sha512-LkTanqEt2YSFors2j+VSnvJlVO5n8zDyjlQU+hz9yl30MHyRsyJfgWyrVHKfE0NjbMVlVScZ4xT5Q72oR0MyXA==}
+
+  '@fontsource/coming-soon@5.2.8':
+    resolution: {integrity: sha512-L2+CynMPwGjrwXq0x77IN2SOXpeuLp6wFzmSp1KxY59+hZhspiHLN7MDRKRXS1LccYLhtDk1gO40j1bpdgX1PQ==}
 
   '@img/sharp-darwin-arm64@0.33.5':
     resolution: {integrity: sha512-UT4p+iz/2H4twwAoLCqfA9UH5pI6DggwKEGuaPy7nCVQ8ZsiY5PIcrRvD1DzuY3qYL07NtIQcWnBSY/heikIFQ==}
@@ -3686,6 +3698,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.27.2':
     optional: true
+
+  '@fontsource/comic-mono@5.2.5': {}
+
+  '@fontsource/coming-soon@5.2.8': {}
 
   '@img/sharp-darwin-arm64@0.33.5':
     optionalDependencies:
