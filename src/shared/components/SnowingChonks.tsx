@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 
+import chonkOne from "../../assets/chonk-1.png";
+import chonkTwo from "../../assets/chonk-2.png";
+import chonkThree from "../../assets/chonk-3.png";
+import chonkFour from "../../assets/chonk-4.png";
+import chonkFive from "../../assets/chonk-5.png";
+import chonkSix from "../../assets/chonk-6.png";
+
 interface Snowflake {
 	id: number;
 	x: number;
@@ -16,12 +23,12 @@ export const SnowingChonks = () => {
 
 	useEffect(() => {
 		const assets = [
-			"/src/assets/chonk-1.png",
-			"/src/assets/chonk-2.png",
-			"/src/assets/chonk-3.png",
-			"/src/assets/chonk-4.png",
-			"/src/assets/chonk-5.png",
-			"/src/assets/chonk-6.png",
+			chonkOne,
+			chonkTwo,
+			chonkThree,
+			chonkFour,
+			chonkFive,
+			chonkSix,
 		];
 
 		const initialSnowflakes: Snowflake[] = Array.from(
