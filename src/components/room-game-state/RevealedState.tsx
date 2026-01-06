@@ -51,7 +51,7 @@ export function RevealedState() {
 			{/* Header */}
 			<div className="bg-gradient-to-r from-primary/20 to-secondary/20 px-4 sm:px-6 py-6 text-center">
 				<h2 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-					{hasConsensus ? "Perfect Consensus!" : "Results Are In!"}
+					{hasConsensus ? "Puurfect Consensus!" : "Results Are In!"}
 				</h2>
 				{hasConsensus && (
 					<p className="text-sm opacity-60 mt-2">
@@ -186,7 +186,7 @@ export function RevealedState() {
 							? "Great teamwork! Everyone estimated the same level of chonkiness."
 							: winningChoices.length > 1
 								? "It's a tie! You might want to discuss and re-vote."
-								: "Most of the team agrees on the chonk level above."}
+								: "Most of the team agrees on the chonk level above, lets talk about it!"}
 					</p>
 				</div>
 			</div>
