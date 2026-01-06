@@ -1,4 +1,24 @@
+import { useEffect, useState } from "react";
+
+import {
+	getThemeFromCookies,
+	setThemeCookie,
+	themes,
+} from "@/shared/utils/theme";
+
 export const ThemeSwitcher = () => {
+	const [currentTheme, setCurrentTheme] = useState(() => getThemeFromCookies());
+
+	useEffect(() => {
+		document.documentElement.setAttribute("data-theme", currentTheme);
+	}, [currentTheme]);
+
+	const handleThemeChange = (theme: string) => {
+		setCurrentTheme(theme);
+		setThemeCookie(theme);
+		document.documentElement.setAttribute("data-theme", theme);
+	};
+
 	return (
 		<div className="dropdown dropdown-end">
 			<button
@@ -21,60 +41,19 @@ export const ThemeSwitcher = () => {
 				tabIndex={-1}
 				className="dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-2xl mt-2"
 			>
-				<li>
-					<input
-						type="radio"
-						name="theme-dropdown"
-						className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-						aria-label="Default"
-						value="default"
-					/>
-				</li>
-				<li>
-					<input
-						type="radio"
-						name="theme-dropdown"
-						className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-						aria-label="Cupcake"
-						value="cupcake"
-					/>
-				</li>
-				<li>
-					<input
-						type="radio"
-						name="theme-dropdown"
-						className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-						aria-label="Retro"
-						value="retro"
-					/>
-				</li>
-				<li>
-					<input
-						type="radio"
-						name="theme-dropdown"
-						className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-						aria-label="Cyberpunk"
-						value="cyberpunk"
-					/>
-				</li>
-				<li>
-					<input
-						type="radio"
-						name="theme-dropdown"
-						className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-						aria-label="Valentine"
-						value="valentine"
-					/>
-				</li>
-				<li>
-					<input
-						type="radio"
-						name="theme-dropdown"
-						className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
-						aria-label="Aqua"
-						value="aqua"
-					/>
-				</li>
+				{themes.map((theme) => (
+					<li key={theme.value}>
+						<input
+							type="radio"
+							name="theme-dropdown"
+							className="theme-controller w-full btn btn-sm btn-block btn-ghost justify-start"
+							aria-label={theme.label}
+							value={theme.value}
+							checked={currentTheme === theme.value}
+							onChange={() => handleThemeChange(theme.value)}
+						/>
+					</li>
+				))}
 			</ul>
 		</div>
 	);
