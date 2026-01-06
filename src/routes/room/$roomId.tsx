@@ -130,7 +130,7 @@ function GameRoomContent() {
 							href="/"
 							className="flex items-center gap-2 hover:opacity-80 transition-opacity"
 						>
-							<span className="font-black text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hidden sm:inline">
+							<span className="font-black text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent inline">
 								Chonk Poker
 							</span>
 						</a>
