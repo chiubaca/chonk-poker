@@ -20,7 +20,7 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "😼 Chonk Poker",
+				title: "Chonk Poker",
 			},
 		],
 		links: [
@@ -44,6 +44,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" data-theme={theme}>
 			<head>
+				<link
+					rel="icon"
+					href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>😸</text></svg>"
+				/>
+
 				<HeadContent />
 			</head>
 			<body>
