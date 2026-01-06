@@ -27,7 +27,7 @@ export const getThemeFromCookies = (): string => {
 			}
 		}
 	}
-	return "default";
+	return "dracula";
 };
 
 export const setThemeCookie = (theme: string): void => {
