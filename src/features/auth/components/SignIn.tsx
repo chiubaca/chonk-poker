@@ -1,10 +1,12 @@
-import { SnowingChonks } from "./SnowingChonks";
 // import { ThemeSwitcher } from "@/shared/components";
+
+import { SnowingChonks } from "@/shared/components";
 
 export const SignIn = ({ signIn }: { signIn: () => void }) => {
 	return (
 		<>
 			<SnowingChonks />
+			
 			<div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/10 via-base-100 to-secondary/10 p-4">
 				<div className="card w-full max-w-sm bg-base-200 shadow-2xl border-4 border-base-300 rounded-3xl overflow-hidden">
 					{/* Cute decorative header */}

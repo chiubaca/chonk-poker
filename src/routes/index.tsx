@@ -16,7 +16,7 @@ import {
 	newUsersToRoomsTable,
 	roomTable,
 } from "@/infrastructure/database/drizzle/schema";
-import { MarqueeBorder } from "@/shared/components";
+import { MarqueeBorder, SnowingChonks } from "@/shared/components";
 
 export const Route = createFileRoute("/")({
 	component: RouteComponent,
@@ -175,7 +175,7 @@ function RouteComponent() {
 
 	return (
 		<>
-			<MarqueeBorder />
+			<SnowingChonks />
 			<div className="min-h-screen bg-gradient-to-br from-primary/5 via-base-100 to-secondary/5 p-4 sm:p-6 overflow-auto">
 				<div className="max-w-md mx-auto pt-8 sm:pt-16 pb-8 flex flex-col gap-6">
 					{/* Header with mascot */}
