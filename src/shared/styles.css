@@ -1,6 +1,7 @@
 @import "tailwindcss";
-@import "daisyui";
-
+@plugin "daisyui" {
+	themes: all;
+}
 /* Set Space Mono as the main font */
 @layer base {
 	html {
