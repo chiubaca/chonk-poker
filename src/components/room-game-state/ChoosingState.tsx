@@ -217,7 +217,7 @@ export function ChoosingState() {
 								<button
 									type="submit"
 									className="btn btn-primary btn-lg w-full rounded-2xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-bold text-base gap-2"
-									disabled={!canSubmit}
+									disabled={!canSubmit || isSubmitting || !user}
 								>
 									{isSubmitting ? (
 										<>

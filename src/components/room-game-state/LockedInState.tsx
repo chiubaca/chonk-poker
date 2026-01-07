@@ -46,7 +46,7 @@ export function LockedInState() {
 				) : (
 					<div className="text-center p-4 bg-warning/10 rounded-2xl border-2 border-warning/30">
 						<p className="text-sm text-warning font-medium">
-							Waiting for a player to reveal cards...
+							Waiting for Player 1 to reveal cards...
 						</p>
 					</div>
 				)}
