@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import z from "zod";
 
 import { createFileRoute } from "@tanstack/react-router";
@@ -80,6 +80,13 @@ function RouteComponent() {
 function GameRoomContent() {
 	const { roomId, gameState, user } = useContext(GameRoomContext);
 	const handleAction = useServerFn(handleGameActionServerFn);
+	const [bootPlayerDialog, setBootPlayerDialog] = useState<{
+		isOpen: boolean;
+		player: PokerPlayer | null;
+	}>({
+		isOpen: false,
+		player: null,
+	});
 
 	if (!gameState) {
 		return (
@@ -112,6 +119,32 @@ function GameRoomContent() {
 				},
 			},
 		});
+	};
+
+	const handleBootPlayer = async () => {
+		if (!user || !bootPlayerDialog.player) {
+			return;
+		}
+
+		await handleAction({
+			data: {
+				roomId,
+				pokerEvent: {
+					type: "player.boot",
+					playerId: bootPlayerDialog.player.id,
+				},
+			},
+		});
+
+		setBootPlayerDialog({ isOpen: false, player: null });
+	};
+
+	const openBootDialog = (player: PokerPlayer) => {
+		setBootPlayerDialog({ isOpen: true, player });
+	};
+
+	const closeBootDialog = () => {
+		setBootPlayerDialog({ isOpen: false, player: null });
 	};
 
 	const lockedInCount = gameState.context.players.filter(
@@ -257,28 +290,39 @@ function GameRoomContent() {
 														)}
 													</div>
 												</div>
-												{gameState.value !== "revealed" && (
-													<div className="flex items-center gap-1.5">
-														<span
-															className={`w-2 h-2 rounded-full ${
-																player.state === "locked-in"
-																	? "bg-success animate-pulse"
-																	: "bg-warning animate-pulse"
-															}`}
-														/>
-														<span
-															className={`text-xs font-medium ${
-																player.state === "locked-in"
-																	? "text-success"
-																	: "text-warning"
-															}`}
+												<div className="flex items-center gap-2">
+													{isFirstPlayer && player.id !== user?.userId && (
+														<button
+															type="button"
+															className="btn btn-error btn-xs rounded-lg"
+															onClick={() => openBootDialog(player)}
 														>
-															{player.state === "locked-in"
-																? "Ready"
-																: "Choosing"}
-														</span>
-													</div>
-												)}
+															Boot
+														</button>
+													)}
+													{gameState.value !== "revealed" && (
+														<div className="flex items-center gap-1.5">
+															<span
+																className={`w-2 h-2 rounded-full ${
+																	player.state === "locked-in"
+																		? "bg-success animate-pulse"
+																		: "bg-warning animate-pulse"
+																}`}
+															/>
+															<span
+																className={`text-xs font-medium ${
+																	player.state === "locked-in"
+																		? "text-success"
+																		: "text-warning"
+																}`}
+															>
+																{player.state === "locked-in"
+																	? "Ready"
+																	: "Choosing"}
+															</span>
+														</div>
+													)}
+												</div>
 											</div>
 										),
 									)}
@@ -288,6 +332,42 @@ function GameRoomContent() {
 					</div>
 				</div>
 			</main>
+
+			<dialog
+				className={`modal ${bootPlayerDialog.isOpen ? "modal-open" : ""}`}
+			>
+				<div className="modal-box">
+					<h3 className="font-bold text-lg">Boot Player</h3>
+					<p className="py-4">
+						Are you sure you want to boot{" "}
+						<span className="font-bold text-error">
+							{bootPlayerDialog.player?.name}
+						</span>{" "}
+						from the game? This will reset the game for everyone.
+					</p>
+					<div className="modal-action">
+						<button
+							type="button"
+							className="btn btn-ghost"
+							onClick={closeBootDialog}
+						>
+							Cancel
+						</button>
+						<button
+							type="button"
+							className="btn btn-error"
+							onClick={handleBootPlayer}
+						>
+							Boot Player
+						</button>
+					</div>
+				</div>
+				<form method="dialog" className="modal-backdrop">
+					<button type="button" onClick={closeBootDialog}>
+						close
+					</button>
+				</form>
+			</dialog>
 		</div>
 	);
 }

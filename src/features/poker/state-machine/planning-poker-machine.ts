@@ -89,6 +89,28 @@ export const planningPokerMachine = setup({
 						}),
 					),
 				},
+				"player.boot": {
+					target: "choosing",
+					actions: assign(({ context, event }) =>
+						produce(context, (draft) => {
+							const playerToBoot = draft.players.find(
+								(p) => p.id === event.playerId,
+							);
+							if (playerToBoot?.state === "locked-in") {
+								draft.lockedInPlayers -= 1;
+							}
+							draft.players = draft.players.filter(
+								(p) => p.id !== event.playerId,
+							);
+							draft.players = draft.players.map((player) => ({
+								...player,
+								choice: undefined,
+								state: "choosing" as const,
+							}));
+							draft.lockedInPlayers = 0;
+						}),
+					),
+				},
 			},
 			// As soon as allPlayersLockedIn === true, we moved into the  locked state
 			always: {
@@ -117,6 +139,28 @@ export const planningPokerMachine = setup({
 						}),
 					),
 				},
+				"player.boot": {
+					target: "choosing",
+					actions: assign(({ context, event }) =>
+						produce(context, (draft) => {
+							const playerToBoot = draft.players.find(
+								(p) => p.id === event.playerId,
+							);
+							if (playerToBoot?.state === "locked-in") {
+								draft.lockedInPlayers -= 1;
+							}
+							draft.players = draft.players.filter(
+								(p) => p.id !== event.playerId,
+							);
+							draft.players = draft.players.map((player) => ({
+								...player,
+								choice: undefined,
+								state: "choosing" as const,
+							}));
+							draft.lockedInPlayers = 0;
+						}),
+					),
+				},
 			},
 			description:
 				"All players have locked in their choices. More players cannot join.",
@@ -129,6 +173,28 @@ export const planningPokerMachine = setup({
 					target: "choosing",
 					actions: assign(({ context }) =>
 						produce(context, (draft) => {
+							draft.players = draft.players.map((player) => ({
+								...player,
+								choice: undefined,
+								state: "choosing" as const,
+							}));
+							draft.lockedInPlayers = 0;
+						}),
+					),
+				},
+				"player.boot": {
+					target: "choosing",
+					actions: assign(({ context, event }) =>
+						produce(context, (draft) => {
+							const playerToBoot = draft.players.find(
+								(p) => p.id === event.playerId,
+							);
+							if (playerToBoot?.state === "locked-in") {
+								draft.lockedInPlayers -= 1;
+							}
+							draft.players = draft.players.filter(
+								(p) => p.id !== event.playerId,
+							);
 							draft.players = draft.players.map((player) => ({
 								...player,
 								choice: undefined,

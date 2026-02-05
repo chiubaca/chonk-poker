@@ -25,6 +25,7 @@ export const pokerEventsSchema = z.discriminatedUnion("type", [
 	z.object({ type: z.literal("player.join"), player: pokerPlayerSchema }),
 	z.object({ type: z.literal("player.choose"), player: pokerPlayerSchema }),
 	z.object({ type: z.literal("player.lock"), player: pokerPlayerSchema }),
+	z.object({ type: z.literal("player.boot"), playerId: z.string() }),
 	z.object({ type: z.literal("game.reveal") }),
 	z.object({ type: z.literal("game.reset") }),
 ]);
