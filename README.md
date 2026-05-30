@@ -88,7 +88,7 @@ This will build the application and deploy it using Wrangler.
 
 ### Code Quality
 
-This project uses [Biome](https://biomejs.dev/) for linting and formatting:
+This project uses [Vite+](https://viteplus.dev/) for linting and formatting (via Oxlint and Oxfmt):
 
 ```bash
 pnpm lint      # Run linting

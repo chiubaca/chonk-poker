@@ -7,9 +7,9 @@
     "build": "vp build",
     "preview": "vp preview",
     "test": "vp test run",
-    "format": "biome format",
-    "lint": "biome lint",
-    "check": "biome check",
+    "format": "vp fmt",
+    "lint": "vp lint",
+    "check": "vp check",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
     "db:pull": "drizzle-kit pull --config drizzle.config.ts",
@@ -47,7 +47,6 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.4",
     "@tanstack/devtools-vite": "^0.3.12",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
