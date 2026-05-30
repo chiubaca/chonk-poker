@@ -230,13 +230,6 @@ export function ChoosingState() {
             </form.Subscribe>
           </div>
         </form>
-
-        {/* Spectator message */}
-        {!user && (
-          <div className="mt-4 text-center p-4 bg-warning/10 rounded-2xl border-2 border-warning/30">
-            <p className="text-sm text-warning font-medium">You're spectating this round</p>
-          </div>
-        )}
       </div>
     </div>
   );

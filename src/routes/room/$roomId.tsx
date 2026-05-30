@@ -7,11 +7,14 @@ import { createServerFn, useServerFn } from "@tanstack/react-start";
 import { env } from "cloudflare:workers";
 
 import { RoomGameState } from "@/components/room-game-state/RoomGameState";
+import { SignInModal } from "@/features/auth/components";
 import { authClient } from "@/features/auth/hooks/auth-client";
 import {
   GameRoomContext,
   GameRoomProvider,
 } from "@/features/poker/realtime-sync/GameRoom.provider";
+import { getUserSessionFn } from "@/features/auth/server-functions/get-session";
+import { joinRoomServerFn } from "@/features/rooms/hooks/use-room-actions";
 import { handleGameActionServerFn } from "@/features/rooms/server-functions/game-room";
 
 // import { ThemeSwitcher } from "@/shared/components";
@@ -33,27 +36,37 @@ export const Route = createFileRoute("/room/$roomId")({
   component: RouteComponent,
   loader: async ({ params }) => {
     try {
-      const gameState = await getGameStateServerFn({
-        data: { roomId: params.roomId },
-      });
+      const [gameState, session] = await Promise.all([
+        getGameStateServerFn({
+          data: { roomId: params.roomId },
+        }),
+        getUserSessionFn(),
+      ]);
+
+      const user = session ? { userId: session.user.id, userName: session.user.name } : undefined;
 
       return {
         gameState: gameState ? JSON.parse(gameState) : null,
+        user,
       };
     } catch (error) {
       console.error("error fetching game state for room:", error);
-      return { gameState: null };
+      return { gameState: null, user: undefined };
     }
   },
 });
 
 function RouteComponent() {
   const { roomId } = Route.useParams();
-  const { gameState } = Route.useLoaderData();
+  const { gameState, user: loaderUser } = Route.useLoaderData();
 
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
 
-  const user = session ? { userId: session.user.id, userName: session.user.name } : undefined;
+  const user = isPending
+    ? loaderUser
+    : session
+      ? { userId: session.user.id, userName: session.user.name }
+      : undefined;
 
   if (!gameState) {
     return (
@@ -78,6 +91,7 @@ function RouteComponent() {
 function GameRoomContent() {
   const { roomId, gameState, user } = useContext(GameRoomContext);
   const handleAction = useServerFn(handleGameActionServerFn);
+  const handleJoinRoomAction = useServerFn(joinRoomServerFn);
   const [bootPlayerDialog, setBootPlayerDialog] = useState<{
     isOpen: boolean;
     player: PokerPlayer | null;
@@ -85,6 +99,7 @@ function GameRoomContent() {
     isOpen: false,
     player: null,
   });
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   if (!gameState) {
     return (
@@ -143,6 +158,26 @@ function GameRoomContent() {
     setBootPlayerDialog({ isOpen: false, player: null });
   };
 
+  const isSpectating =
+    !user || !gameState.context.players.some((p: PokerPlayer) => p.id === user.userId);
+
+  const handleJoinRoom = async () => {
+    if (!user) {
+      setAuthModalOpen(true);
+      return;
+    }
+    if (gameState.value !== "choosing") {
+      return;
+    }
+    await handleJoinRoomAction({
+      data: {
+        roomId,
+        userId: user.userId,
+        userName: user.userName,
+      },
+    });
+  };
+
   const lockedInCount = gameState.context.players.filter(
     (p: PokerPlayer) => p.state === "locked-in",
   ).length;
@@ -169,23 +204,64 @@ function GameRoomContent() {
               </div>
             </div>
 
-            {/* User badge */}
+            {/* User badge / Join Room */}
             <div className="flex items-center gap-2">
               {/* <ThemeSwitcher /> */}
-              {user ? (
+              {isSpectating ? (
+                <button
+                  type="button"
+                  className="btn btn-primary btn-sm rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 font-bold"
+                  onClick={handleJoinRoom}
+                  disabled={!!user && gameState.value !== "choosing"}
+                  title={
+                    user && gameState.value !== "choosing"
+                      ? "Wait for the next round to join"
+                      : undefined
+                  }
+                >
+                  {user ? "Join Room" : "Sign In to Join"}
+                </button>
+              ) : (
                 <div className="flex items-center gap-2 bg-primary/10 rounded-full px-3 py-1.5 border-2 border-primary/30">
                   <div className="w-6 h-6 rounded-full bg-primary/30 flex items-center justify-center text-xs font-bold">
                     {user.userName.charAt(0).toUpperCase()}
                   </div>
                   <span className="font-medium text-sm hidden sm:inline">{user.userName}</span>
                 </div>
-              ) : (
-                <div className="badge badge-ghost">Spectating</div>
               )}
             </div>
           </div>
         </div>
       </header>
+
+      {/* Spectator Banner */}
+      {isSpectating && (
+        <div className="bg-warning/10 border-b-4 border-warning/30 px-4 py-2">
+          <div className="max-w-6xl mx-auto flex items-center justify-center gap-2">
+            <svg
+              className="w-5 h-5 text-warning"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <title>Eye icon</title>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+            <p className="text-sm text-warning font-bold">You are spectating</p>
+          </div>
+        </div>
+      )}
 
       <main className="max-w-6xl mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
@@ -333,6 +409,8 @@ function GameRoomContent() {
           </button>
         </form>
       </dialog>
+
+      <SignInModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </div>
   );
 }
