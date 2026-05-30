@@ -8,18 +8,18 @@ import { env } from "cloudflare:workers";
 import * as schema from "@/infrastructure/database/drizzle/schema";
 
 export const auth = betterAuth({
-	database: drizzleAdapter(drizzle(env.CHONK_POKER_DB), {
-		provider: "sqlite",
-		schema,
-	}),
-	baseURL: process.env.BETTER_AUTH_URL,
-	socialProviders: {
-		google: {
-			clientId: process.env.GOOGLE_CLIENT_ID as string,
-			clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-		},
-	},
-	plugins: [
-		tanstackStartCookies(), // make sure this is the last plugin in the array
-	],
+  database: drizzleAdapter(drizzle(env.CHONK_POKER_DB), {
+    provider: "sqlite",
+    schema,
+  }),
+  baseURL: process.env.BETTER_AUTH_URL,
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
+  },
+  plugins: [
+    tanstackStartCookies(), // make sure this is the last plugin in the array
+  ],
 });

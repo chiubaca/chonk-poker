@@ -7,20 +7,20 @@ import { LockedInState } from "./LockedInState";
 import { RevealedState } from "./RevealedState";
 
 export function RoomGameState() {
-	const { gameState } = useContext(GameRoomContext);
+  const { gameState } = useContext(GameRoomContext);
 
-	if (!gameState) {
-		return null;
-	}
+  if (!gameState) {
+    return null;
+  }
 
-	switch (gameState.value) {
-		case "choosing":
-			return <ChoosingState />;
-		case "lockedIn":
-			return <LockedInState />;
-		case "revealed":
-			return <RevealedState />;
-		default:
-			return null;
-	}
+  switch (gameState.value) {
+    case "choosing":
+      return <ChoosingState />;
+    case "lockedIn":
+      return <LockedInState />;
+    case "revealed":
+      return <RevealedState />;
+    default:
+      return null;
+  }
 }

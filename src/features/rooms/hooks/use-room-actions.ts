@@ -8,101 +8,93 @@ import { createServerFn } from "@tanstack/react-start";
 import { env } from "cloudflare:workers";
 
 import { getDb } from "@/infrastructure/database/database";
-import {
-	newUsersToRoomsTable,
-	roomTable,
-} from "@/infrastructure/database/drizzle/schema";
+import { newUsersToRoomsTable, roomTable } from "@/infrastructure/database/drizzle/schema";
 
 import type { CreateRoomRequest, JoinRoomRequest } from "../types/room.types";
 
 export const createRoomServerFn = createServerFn({ method: "POST" })
-	.inputValidator((data: CreateRoomRequest) => data)
-	.handler(async ({ data }) => {
-		const { userId, userName } = data;
-		const user = { id: userId, name: userName };
+  .inputValidator((data: CreateRoomRequest) => data)
+  .handler(async ({ data }) => {
+    const { userId, userName } = data;
+    const user = { id: userId, name: userName };
 
-		const newRoomId = nanoid(5).toUpperCase();
-		const db = getDb();
+    const newRoomId = nanoid(5).toUpperCase();
+    const db = getDb();
 
-		await db
-			.insert(roomTable)
-			.values({
-				id: newRoomId,
-				status: "live",
-			})
-			.onConflictDoUpdate({
-				target: roomTable.id,
-				set: {
-					id: newRoomId,
-					status: "live",
-				},
-			});
-		await db.insert(newUsersToRoomsTable).values({ roomId: newRoomId, userId });
+    await db
+      .insert(roomTable)
+      .values({
+        id: newRoomId,
+        status: "live",
+      })
+      .onConflictDoUpdate({
+        target: roomTable.id,
+        set: {
+          id: newRoomId,
+          status: "live",
+        },
+      });
+    await db.insert(newUsersToRoomsTable).values({ roomId: newRoomId, userId });
 
-		const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
-		await stub.createRoom(user);
+    const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
+    await stub.createRoom(user);
 
-		return { roomId: newRoomId };
-	});
+    return { roomId: newRoomId };
+  });
 
 export const useCreateRoom = () => {
-	const router = useRouter();
+  const router = useRouter();
 
-	return useMutation({
-		mutationFn: createRoomServerFn,
-		onSuccess: (data) => {
-			router.navigate({
-				to: "/room/$roomId",
-				params: { roomId: data.roomId },
-			});
-		},
-	});
+  return useMutation({
+    mutationFn: createRoomServerFn,
+    onSuccess: (data) => {
+      void router.navigate({
+        to: "/room/$roomId",
+        params: { roomId: data.roomId },
+      });
+    },
+  });
 };
 
 export const joinRoomServerFn = createServerFn({ method: "POST" })
-	.inputValidator((data: JoinRoomRequest) => data)
-	.handler(async ({ data }) => {
-		const { userId, userName, roomId } = data;
-		const user = { id: userId, name: userName };
+  .inputValidator((data: JoinRoomRequest) => data)
+  .handler(async ({ data }) => {
+    const { userId, userName, roomId } = data;
+    const user = { id: userId, name: userName };
 
-		const db = getDb();
+    const db = getDb();
 
-		// Check if user is already in the room
-		const existingRecord = await db
-			.select()
-			.from(newUsersToRoomsTable)
-			.where(
-				and(
-					eq(newUsersToRoomsTable.roomId, roomId),
-					eq(newUsersToRoomsTable.userId, userId),
-				),
-			)
-			.limit(1);
+    // Check if user is already in the room
+    const existingRecord = await db
+      .select()
+      .from(newUsersToRoomsTable)
+      .where(and(eq(newUsersToRoomsTable.roomId, roomId), eq(newUsersToRoomsTable.userId, userId)))
+      .limit(1);
 
-		// Only insert if no existing record
-		if (existingRecord.length === 0) {
-			await db.insert(newUsersToRoomsTable).values({ roomId, userId });
-		}
+    // Only insert if no existing record
+    if (existingRecord.length === 0) {
+      await db.insert(newUsersToRoomsTable).values({ roomId, userId });
+    }
 
-		const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
-		await stub.gameAction({
-			player: { ...user, state: "choosing" },
-			type: "player.join",
-		});
+    const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(roomId);
+    await stub.gameAction({
+      player: { ...user, state: "choosing" },
+      type: "player.join",
+    });
 
-		return { roomId };
-	});
+    return { roomId };
+  });
 
 export const useJoinRoom = () => {
-	const router = useRouter();
+  const router = useRouter();
 
-	return useMutation({
-		mutationFn: joinRoomServerFn,
-		onSuccess: (data) => {
-			router.navigate({
-				to: "/room/$roomId",
-				params: { roomId: data.roomId },
-			});
-		},
-	});
+  return useMutation({
+    mutationFn: joinRoomServerFn,
+    onSuccess: (data) => {
+      void router.navigate({
+        to: "/room/$roomId",
+        params: { roomId: data.roomId },
+      });
+    },
+  });
 };
