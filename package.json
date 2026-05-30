@@ -10,7 +10,7 @@
     "format": "vp fmt",
     "lint": "vp lint",
     "check": "vp check",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "pnpm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
     "db:pull": "drizzle-kit pull --config drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config drizzle.config.ts",
