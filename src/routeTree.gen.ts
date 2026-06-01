@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RoomRoomIdRouteImport } from './routes/room/$roomId'
+import { Route as MeetSidepanelRouteImport } from './routes/meet/sidepanel'
 import { Route as RoomWsRoomIdRouteImport } from './routes/room/ws/$roomId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const RoomRoomIdRoute = RoomRoomIdRouteImport.update({
   id: '/room/$roomId',
   path: '/room/$roomId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetSidepanelRoute = MeetSidepanelRouteImport.update({
+  id: '/meet/sidepanel',
+  path: '/meet/sidepanel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RoomWsRoomIdRoute = RoomWsRoomIdRouteImport.update({
@@ -37,12 +43,14 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/meet/sidepanel': typeof MeetSidepanelRoute
   '/room/$roomId': typeof RoomRoomIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/room/ws/$roomId': typeof RoomWsRoomIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/meet/sidepanel': typeof MeetSidepanelRoute
   '/room/$roomId': typeof RoomRoomIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/room/ws/$roomId': typeof RoomWsRoomIdRoute
@@ -50,20 +58,38 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/meet/sidepanel': typeof MeetSidepanelRoute
   '/room/$roomId': typeof RoomRoomIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/room/ws/$roomId': typeof RoomWsRoomIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/room/$roomId' | '/api/auth/$' | '/room/ws/$roomId'
+  fullPaths:
+    | '/'
+    | '/meet/sidepanel'
+    | '/room/$roomId'
+    | '/api/auth/$'
+    | '/room/ws/$roomId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/room/$roomId' | '/api/auth/$' | '/room/ws/$roomId'
-  id: '__root__' | '/' | '/room/$roomId' | '/api/auth/$' | '/room/ws/$roomId'
+  to:
+    | '/'
+    | '/meet/sidepanel'
+    | '/room/$roomId'
+    | '/api/auth/$'
+    | '/room/ws/$roomId'
+  id:
+    | '__root__'
+    | '/'
+    | '/meet/sidepanel'
+    | '/room/$roomId'
+    | '/api/auth/$'
+    | '/room/ws/$roomId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  MeetSidepanelRoute: typeof MeetSidepanelRoute
   RoomRoomIdRoute: typeof RoomRoomIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   RoomWsRoomIdRoute: typeof RoomWsRoomIdRoute
@@ -85,6 +111,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoomRoomIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/meet/sidepanel': {
+      id: '/meet/sidepanel'
+      path: '/meet/sidepanel'
+      fullPath: '/meet/sidepanel'
+      preLoaderRoute: typeof MeetSidepanelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/room/ws/$roomId': {
       id: '/room/ws/$roomId'
       path: '/room/ws/$roomId'
@@ -104,6 +137,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  MeetSidepanelRoute: MeetSidepanelRoute,
   RoomRoomIdRoute: RoomRoomIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   RoomWsRoomIdRoute: RoomWsRoomIdRoute,

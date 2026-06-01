@@ -1,0 +1,20 @@
+{
+  "addOns": {
+    "common": {
+      "name": "chonk-poker",
+      "logoUrl": "https://em-content.zobj.net/source/apple/453/cat-with-wry-smile_1f63c.png"
+    },
+    "meet": {
+      "web": {
+        "supportsScreenSharing": true,
+        "logoUrl": "https://em-content.zobj.net/source/apple/453/cat-with-wry-smile_1f63c.png",
+        "addOnOrigins": ["https://chonk-poker.chiubaca.com"],
+        "sidePanelUrl": "https://chonk-poker.chiubaca.com/meet/sidepanel",
+        "darkModeLogoUrl": "https://em-content.zobj.net/source/apple/453/cat-with-wry-smile_1f63c.png"
+      }
+    },
+    "httpOptions": {
+      "granularOauthPermissionSupport": "OPT_IN"
+    }
+  }
+}

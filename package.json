@@ -23,6 +23,7 @@
     "@cloudflare/vite-plugin": "^1.39.0",
     "@fontsource/comic-mono": "^5.2.5",
     "@fontsource/coming-soon": "^5.2.8",
+    "@googleworkspace/meet-addons": "^1.2.0",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-devtools": "^0.7.11",
     "@tanstack/react-form": "^1.33.0",

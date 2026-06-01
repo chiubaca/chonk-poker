@@ -27,6 +27,9 @@ importers:
       '@fontsource/coming-soon':
         specifier: ^5.2.8
         version: 5.2.8
+      '@googleworkspace/meet-addons':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@tailwindcss/vite':
         specifier: ^4.3.0
         version: 4.3.0(@voidzero-dev/vite-plus-core@0.1.23(@types/node@22.19.19)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(typescript@5.9.3))
@@ -1056,6 +1059,9 @@ packages:
 
   '@fontsource/coming-soon@5.2.8':
     resolution: {integrity: sha512-L2+CynMPwGjrwXq0x77IN2SOXpeuLp6wFzmSp1KxY59+hZhspiHLN7MDRKRXS1LccYLhtDk1gO40j1bpdgX1PQ==}
+
+  '@googleworkspace/meet-addons@1.2.0':
+    resolution: {integrity: sha512-UNyyJZ5x+NiD51OKATw7n6iUmVyaoTyLmMwKR+Bvwe9YkPw0Y45SZwa1Gev8YkJaiQJ/zo23Zhv0cH/QYnxuOQ==}
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -3718,6 +3724,8 @@ snapshots:
   '@fontsource/comic-mono@5.2.5': {}
 
   '@fontsource/coming-soon@5.2.8': {}
+
+  '@googleworkspace/meet-addons@1.2.0': {}
 
   '@img/colour@1.1.0': {}
 
