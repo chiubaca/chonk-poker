@@ -8,7 +8,7 @@ import { env } from "cloudflare:workers";
 
 import { RoomGameState } from "@/components/room-game-state/RoomGameState";
 import { SignInModal } from "@/features/auth/components";
-import { authClient } from "@/features/auth/hooks/auth-client";
+import { authClient, signInWithOneTap } from "@/features/auth/hooks/auth-client";
 import {
   GameRoomContext,
   GameRoomProvider,
@@ -169,6 +169,7 @@ function GameRoomContent() {
     if (gameState.value !== "choosing") {
       return;
     }
+    await signInWithOneTap();
     await handleJoinRoomAction({
       data: {
         roomId,

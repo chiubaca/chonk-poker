@@ -15,10 +15,10 @@ import type { CreateRoomRequest, JoinRoomRequest } from "../types/room.types";
 export const createRoomServerFn = createServerFn({ method: "POST" })
   .inputValidator((data: CreateRoomRequest) => data)
   .handler(async ({ data }) => {
-    const { userId, userName } = data;
+    const { userId, userName, roomId: explicitRoomId } = data;
     const user = { id: userId, name: userName };
 
-    const newRoomId = nanoid(5).toUpperCase();
+    const newRoomId = explicitRoomId ? explicitRoomId.toUpperCase() : nanoid(5).toUpperCase();
     const db = getDb();
 
     await db
@@ -29,12 +29,12 @@ export const createRoomServerFn = createServerFn({ method: "POST" })
       })
       .onConflictDoUpdate({
         target: roomTable.id,
-        set: {
-          id: newRoomId,
-          status: "live",
-        },
+        set: { status: "live" },
       });
-    await db.insert(newUsersToRoomsTable).values({ roomId: newRoomId, userId });
+    await db
+      .insert(newUsersToRoomsTable)
+      .values({ roomId: newRoomId, userId })
+      .onConflictDoNothing();
 
     const stub = env.POKER_ROOM_DURABLE_OBJECT.getByName(newRoomId);
     await stub.createRoom(user);

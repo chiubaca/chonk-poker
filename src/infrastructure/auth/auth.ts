@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
+import { oneTap } from "better-auth/plugins";
 import { drizzle } from "drizzle-orm/d1";
 
 import { env } from "cloudflare:workers";
@@ -12,14 +13,32 @@ export const auth = betterAuth({
     provider: "sqlite",
     schema,
   }),
-  baseURL: process.env.BETTER_AUTH_URL,
+  secret: env.BETTER_AUTH_SECRET,
+  baseURL: env.BETTER_AUTH_URL,
   socialProviders: {
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    },
+  },
+  // Accept bearer tokens from localStorage (for iframe auth)
+  bearer: {
+    enabled: true,
+  },
+  trustedOrigins: [
+    "https://meet.google.com",
+    "https://chonk-poker.chiubaca.com",
+    "http://localhost:3000",
+  ],
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+      partitioned: true,
     },
   },
   plugins: [
-    tanstackStartCookies(), // make sure this is the last plugin in the array
+    oneTap(), // Google One Tap / FedCM sign-in
+    tanstackStartCookies(), // must be last
   ],
 });

@@ -13,6 +13,7 @@ export type UserRoom = {
 export type CreateRoomRequest = {
   userId: string;
   userName: string;
+  roomId?: string;
 };
 
 export type JoinRoomRequest = {
