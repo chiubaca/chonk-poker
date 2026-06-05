@@ -60,6 +60,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           <footer className="bg-base-200 border-t border-base-300 py-4">
             <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-4 text-sm opacity-60">
               <span>© Chonk Poker</span>
+              <Link to="/home" className="link link-primary">
+                About
+              </Link>
               <Link to="/terms" className="link link-primary">
                 Terms
               </Link>
