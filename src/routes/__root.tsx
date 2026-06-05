@@ -1,7 +1,7 @@
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { createRootRoute, HeadContent, Link, Scripts } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 
 import { getQueryClient } from "@/infrastructure/query-client";
@@ -57,6 +57,17 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body>
         <QueryClientProvider client={queryClient}>
           {children}
+          <footer className="bg-base-200 border-t border-base-300 py-4">
+            <div className="max-w-6xl mx-auto px-4 flex items-center justify-center gap-4 text-sm opacity-60">
+              <span>© Chonk Poker</span>
+              <Link to="/terms" className="link link-primary">
+                Terms
+              </Link>
+              <Link to="/privacy" className="link link-primary">
+                Privacy
+              </Link>
+            </div>
+          </footer>
           <TanStackDevtools
             config={{
               position: "bottom-right",
