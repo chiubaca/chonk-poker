@@ -25,6 +25,10 @@ export const Route = createRootRoute({
       {
         title: "Chonk Poker",
       },
+      {
+        name: "google-site-verification",
+        content: "Nkxel-AnDIJp4RkauYqn15oRaNUHxmuMYPZocCYCE3E",
+      },
     ],
     links: [
       {
